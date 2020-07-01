@@ -7,6 +7,7 @@ package Class;
 
 import V_Admin.HomeAdmin;
 import V_User.HomeUser;
+import V_User.V_Data_Koleksi_User;
 import java.awt.Color;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -46,7 +47,7 @@ public class Login extends javax.swing.JFrame {
                     } else if (rs.getString("Hak_Akses").equals("USER")) {
                         JOptionPane.showMessageDialog(null, "LOGIN SUCCES ");
                         this.dispose();
-                        HomeUser mn = new HomeUser();
+                        V_Data_Koleksi_User mn = new V_Data_Koleksi_User();
                         mn.setVisible(true);
                     }
                 } else {

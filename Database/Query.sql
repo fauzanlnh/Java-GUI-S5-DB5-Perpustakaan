@@ -11,3 +11,21 @@ SELECT * FROM T_Koleksi, T_Peminjaman WHERE T_Koleksi.Kd_Koleksi = T_Peminjaman.
 ORDER BY Judul_Koleksi ASC
 
 SELECT COUNT(Kd_Peminjaman) AS 'Banyak_Kode' FROM T_Peminjaman WHERE MONTH(Tgl_Pinjam) = '5' AND YEAR(Tgl_Pinjam) = '2020'
+
+//DATA
+SELECT T_Peminjaman.Kd_Peminjaman, T_Anggota.Nama_Anggota, T_Koleksi.Judul_Koleksi
+FROM T_Peminjaman JOIN T_Anggota USING(Kd_Anggota) JOIN T_Koleksi USING(Kd_Koleksi)
+WHERE T_Peminjaman.Status != 'DIPINJAM' AND T_Peminjaman.Tgl_Kembali BETWEEN '2020-07-01' AND LAST_DAY( '2020-07-01')
+
+
+
+
+//DATA GLOBAL
+SELECT DISTINCT(SELECT COUNT(Kd_Peminjaman) FROM T_Peminjaman WHERE STATUS='DIKEMBALIKAN') AS 'BanyakPengembalian', 
+(SELECT COUNT(Kd_Peminjaman) FROM T_Peminjaman WHERE STATUS = 'HILANG') AS 'BanyakPengembalian',
+(SELECT COUNT(Kd_Peminjaman) FROM T_Peminjaman WHERE STATUS!='DIPINJAM') AS 'TotalPengembalian',
+(SELECT COUNT(Kd_Peminjaman) FROM T_Peminjaman WHERE STATUS='DIPINJAM') AS 'BelumDikembalikan', 
+(SELECT COUNT(Kd_Peminjaman) FROM T_Peminjaman) AS 'BanyakPinjaman'
+(SELECT COUNT(Kd_Peminjaman) FROM T_Peminjaman) AS 'BanyakPinjaman'
+FROM t_peminjaman
+WHERE T_Peminjaman.Tgl_Kembali BETWEEN '2020-07-01' AND LAST_DAY( '2020-07-01')
