@@ -107,7 +107,7 @@ public class V_Peminjaman_Done extends javax.swing.JFrame {
         } else {
             try {
                 Statement stmt = koneksi.createStatement();
-                SelectKoleksi = "SELECT * FROM T_KOLEKSI WHERE Kd_Koleksi = '" + KdKoleksi + "'";
+                SelectKoleksi = "SELECT * FROM T_KOLEKSI WHERE Kd_Koleksi = '" + KdKoleksi + "' AND STATUS = 'TERSEDIA'";
                 ResultSet rs = stmt.executeQuery(SelectKoleksi);
                 if (rs.next()) {
                     NamaKoleksi = rs.getString("Judul_Koleksi");
@@ -124,7 +124,7 @@ public class V_Peminjaman_Done extends javax.swing.JFrame {
                     data[3] = NamaKoleksi;
                     tableModel.addRow(data);
                 } else {
-                    JOptionPane.showMessageDialog(null, "KODE KOLEKSI SALAH, PERIKSA KEMBALI KODE KOLEKSI");
+                    JOptionPane.showMessageDialog(null, "KODE KOLEKSI SALAH ATAU BUKU TIDAK TERSEDIA, PERIKSA KEMBALI KODE KOLEKSI");
                     txtKodeKoleksi.requestFocus();
                 }
 

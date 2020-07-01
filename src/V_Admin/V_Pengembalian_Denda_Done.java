@@ -190,7 +190,8 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
         String tanggalMySQL = "yyyy-MM-dd";
         SimpleDateFormat fm = new SimpleDateFormat(tanggalMySQL);
         String Tanggal = String.valueOf(fm.format(txtTanggal.getDate()));
-        int BerhasilPeminjaman = 0, BerhasilKoleksi = 0;
+        int BUbahPeminjaman = 0, BUbahKoleksi = 0, BInputPengembalianBayar = 0;
+        String KdKoleksi = null;
         if (tableModel.getRowCount() < 1) {
             JOptionPane.showMessageDialog(null, "KOLEKSI YANG DIKEMBALIKAN BELUM DI ISI");
             txtKodePeminjaman.requestFocus();
@@ -198,14 +199,28 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
             try {
                 Statement stmt = koneksi.createStatement();
                 for (int i = 0; i < tableModel.getRowCount(); i++) {
-                    String Ubah_TKoleksi = "UPDATE T_Koleksi SET Status ='TERSEDIA', Estimasi_Pengembalian = (NULL) WHERE Kd_Koleksi = '" + tableModel.getValueAt(i, 1) + "'";
-                    String Ubah_TPeminjaman = "UPDATE T_Peminjaman SET Tgl_Kembali ='" + Tanggal + "', DENDA ='" + tableModel.getValueAt(i, 5) + "', Status = 'DIKEMBALIKAN' WHERE Kd_Peminjaman = '" + tableModel.getValueAt(i, 0) + "'";
-                    BerhasilKoleksi = stmt.executeUpdate(Ubah_TKoleksi);
-                    BerhasilPeminjaman = stmt.executeUpdate(Ubah_TPeminjaman);
+                    String getKdKoleksi = "SELECT T_Peminjaman.Kd_Koleksi FROM T_Koleksi, T_Peminjaman WHERE T_Peminjaman.Kd_Koleksi = T_Koleksi.Kd_Koleksi AND Kd_Peminjaman = '" + tableModel.getValueAt(i, 0) + "'";
+                    ResultSet rs = stmt.executeQuery(getKdKoleksi);
+                    if (rs.next()) {
+                        KdKoleksi = rs.getString("Kd_Koleksi");
+                    }
+
+                    String sqlInput = "INSERT INTO T_Pengembalian_Bayar(Tanggal_Ganti, Harga_Ganti, Kd_Peminjaman) VALUES('" + Tanggal + "', " + tableModel.getValueAt(i, 2) + ", '" + tableModel.getValueAt(i, 0) + "')";
+                    BInputPengembalianBayar = stmt.executeUpdate(sqlInput);
+
+                    String Ubah_TKoleksi = "UPDATE T_Koleksi SET Status ='HILANG', Estimasi_Pengembalian=(NULL) WHERE Kd_Koleksi = '" + KdKoleksi + "'";
+                    BUbahKoleksi = stmt.executeUpdate(Ubah_TKoleksi);
+
+                    String Ubah_TPeminjaman = "UPDATE T_Peminjaman SET Tgl_Kembali ='" + Tanggal + "', Denda_Keterlambatan ='" + tableModel.getValueAt(i, 4) + "', Status = 'HILANG', Estimasi_Pengembalian =(NULL) "
+                            + "WHERE Kd_Peminjaman = '" + tableModel.getValueAt(i, 0) + "'";
+                    BUbahPeminjaman = stmt.executeUpdate(Ubah_TPeminjaman);
+                    System.out.println("Baris Ke-" + i + "\n Kode Koleksi : " + getKdKoleksi);
+                    System.out.println(sqlInput);
                     System.out.println(Ubah_TKoleksi);
                     System.out.println(Ubah_TPeminjaman);
+
                 }
-                if (BerhasilKoleksi > 0 && BerhasilPeminjaman > 0) {
+                if (BUbahPeminjaman > 0 && BUbahKoleksi > 0 && BInputPengembalianBayar > 0) {
                     JOptionPane.showMessageDialog(null, "PENGEMBALIAN BERHASIL DILAKUKAN");
                     Clear();
                 } else {

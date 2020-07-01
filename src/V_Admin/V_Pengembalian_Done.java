@@ -113,7 +113,7 @@ public class V_Pengembalian_Done extends javax.swing.JFrame {
                 Statement stmt = koneksi.createStatement();
                 for (int i = 0; i < tableModel.getRowCount(); i++) {
                     String Ubah_TKoleksi = "UPDATE T_Koleksi SET Status ='TERSEDIA', Estimasi_Pengembalian = (NULL) WHERE Kd_Koleksi = '" + tableModel.getValueAt(i, 1) + "'";
-                    String Ubah_TPeminjaman = "UPDATE T_Peminjaman SET Tgl_Kembali ='" + Tanggal + "', DENDA ='" + tableModel.getValueAt(i, 5) + "', Status = 'DIKEMBALIKAN' WHERE Kd_Peminjaman = '" + tableModel.getValueAt(i, 0) + "'";
+                    String Ubah_TPeminjaman = "UPDATE T_Peminjaman SET Tgl_Kembali ='" + Tanggal + "', Denda_Keterlambatan ='" + tableModel.getValueAt(i, 5) + "', Status = 'DIKEMBALIKAN' WHERE Kd_Peminjaman = '" + tableModel.getValueAt(i, 0) + "'";
                     BerhasilKoleksi = stmt.executeUpdate(Ubah_TKoleksi);
                     BerhasilPeminjaman = stmt.executeUpdate(Ubah_TPeminjaman);
                     System.out.println(Ubah_TKoleksi);
