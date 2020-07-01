@@ -11,11 +11,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
@@ -39,6 +35,8 @@ public class V_Peminjaman_Done extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         setJDate();
         System.out.println(Estimasi());
+        System.out.println(Bulan);
+        System.out.println(Tahun);
     }
 
     public void setJDate() {
@@ -46,6 +44,7 @@ public class V_Peminjaman_Done extends javax.swing.JFrame {
         txtTanggal.setDate(today.getTime());
         Bulan = today.get(Calendar.MONTH);
         Tahun = today.get(Calendar.YEAR);
+        Bulan = Bulan + 1;
     }
 
     public String Estimasi() {
@@ -68,7 +67,7 @@ public class V_Peminjaman_Done extends javax.swing.JFrame {
         DefaultTableModel tableModel = (DefaultTableModel) tblPeminjaman.getModel();
         String[] data = new String[1];
         int getrow = tblPeminjaman.getSelectedRow();
-        int BanyakKode;
+        int BanyakKode = 0;
         if (getrow >= 0) {
             int ok = JOptionPane.showConfirmDialog(null, "Yakin Mau Hapus?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
             if (ok == 0) {
@@ -81,10 +80,11 @@ public class V_Peminjaman_Done extends javax.swing.JFrame {
                         BanyakKode = rs2.getInt("Banyak_Kode");
                     }
                     for (int i = 0; i < tableModel.getRowCount(); i++) {
-                        BanyakKode = 0;
-                        BanyakKode += i + 1;
                         tblPeminjaman.setValueAt(i + 1, i, 0);
+                        int no = (int) tblPeminjaman.getValueAt(i, 0);
+                        BanyakKode += no;
                         tblPeminjaman.setValueAt("" + Tahun + Bulan + "." + BanyakKode, i, 1);
+                        BanyakKode = 1;
                     }
                 } catch (SQLException e) {
                     System.out.println(e);
@@ -115,6 +115,7 @@ public class V_Peminjaman_Done extends javax.swing.JFrame {
                     ResultSet rs2 = stmt.executeQuery(SelectPeminjaman);
                     if (rs2.next()) {
                         BanyakKode = rs2.getInt("Banyak_Kode");
+                        System.out.println(BanyakKode);
                     }
                     BanyakKode += no;
                     data[0] = No;
@@ -162,13 +163,13 @@ public class V_Peminjaman_Done extends javax.swing.JFrame {
                             + "AND T_Anggota.Kd_Anggota = '" + KodeAnggota + "'";
                     ResultSet rs2 = stmt.executeQuery(JumlahPinjaman);
                     if (rs2.next()) {
-                        int Total_Pinjaman = rs.getInt("Total_Pinjaman");
-                        String Status = rs.getString("Status_Anggota");
-                        if ((Status.equals("BIASA") && Total_Pinjaman <= 3) && (Status.equals("KHUSUS") && Total_Pinjaman <= 5)) {
+                        int Total_Pinjaman = rs2.getInt("Total_Pinjaman");
+                        String Status = rs2.getString("Status_Anggota");
+                        if ((Status.equals("BIASA") && Total_Pinjaman <= 3) || (Status.equals("KHUSUS") && Total_Pinjaman <= 5)) {
                             for (int i = 0; i < tableModel.getRowCount(); i++) {
                                 String TambahPinjaman = "INSERT INTO T_Peminjaman (Kd_Peminjaman, Kd_Koleksi, Kd_Anggota, Tgl_Pinjam, Estimasi_Pengembalian, Status) VALUES"
                                         + "('" + tableModel.getValueAt(i, 1) + "', '" + tableModel.getValueAt(i, 2) + "', '" + KodeAnggota + "', '" + Tanggal + "', '" + Estimasi() + "', 'DIPINJAM')";
-                                String UpdateKoleksi = "UPDATE T_Koleksi SET STATUS = 'DIPINJAM', EstimasiPengembalian='" + Estimasi() + "' WHERE Kd_Koleksi='" + tableModel.getValueAt(i, 2) + "'";
+                                String UpdateKoleksi = "UPDATE T_Koleksi SET STATUS = 'DIPINJAM', Estimasi_Pengembalian='" + Estimasi() + "' WHERE Kd_Koleksi='" + tableModel.getValueAt(i, 2) + "'";
                                 BerhasilTambah = stmt.executeUpdate(TambahPinjaman);
                                 BerhasilUpdate = stmt.executeUpdate(UpdateKoleksi);
                                 System.out.println(TambahPinjaman);

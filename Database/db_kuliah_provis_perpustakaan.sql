@@ -116,7 +116,7 @@ CREATE TABLE `t_koleksi` (
 /*Data for the table `t_koleksi` */
 
 insert  into `t_koleksi`(`Kd_Koleksi`,`Judul_Koleksi`,`Nama_Pengarang`,`Nama_Penerbit`,`Tahun_Terbit`,`No_Rak`,`Kd_Jenis`,`Kd_Tipe`,`Kd_Kategori`,`Kd_Terbitan`,`Status`,`Estimasi_Pengembalian`,`Harga`) values 
-(1,'ACCESS BY DESIGN','GEORGE A. COVINGTON','VAN NOSTRAND REIHOLD','2007','5',1,1,14,3,'TERSEDIA',NULL,250000);
+(1,'ACCESS BY DESIGN','GEORGE A. COVINGTON','VAN NOSTRAND REIHOLD','2007','5',1,1,14,3,'DIPINJAM','2020-07-08',250000);
 
 /*Table structure for table `t_master` */
 
@@ -133,7 +133,7 @@ CREATE TABLE `t_master` (
 /*Data for the table `t_master` */
 
 insert  into `t_master`(`Username`,`Password`,`Hak_Akses`,`Kd_Pegawai`) values 
-('ADMIN','ADMIN','ADMIN',NULL),
+('ADMIN','ADMIN3','ADMIN',NULL),
 ('USER','USER','USER',NULL);
 
 /*Table structure for table `t_peminjaman` */
@@ -147,7 +147,7 @@ CREATE TABLE `t_peminjaman` (
   `Tgl_Pinjam` date DEFAULT NULL,
   `Tgl_Kembali` date DEFAULT NULL,
   `Estimasi_Pengembalian` date DEFAULT NULL,
-  `Denda` int(11) DEFAULT NULL,
+  `Denda_Keterlambatan` int(11) DEFAULT NULL,
   `Status` char(15) DEFAULT NULL,
   PRIMARY KEY (`Kd_Peminjaman`),
   KEY `Kd_Anggota` (`Kd_Anggota`),
@@ -158,8 +158,40 @@ CREATE TABLE `t_peminjaman` (
 
 /*Data for the table `t_peminjaman` */
 
-insert  into `t_peminjaman`(`Kd_Peminjaman`,`Kd_Koleksi`,`Kd_Anggota`,`Tgl_Pinjam`,`Tgl_Kembali`,`Estimasi_Pengembalian`,`Denda`,`Status`) values 
-('20205.1',1,'10118227','2020-06-30','2020-06-30','2020-07-07',0,'DIKEMBALIKAN');
+insert  into `t_peminjaman`(`Kd_Peminjaman`,`Kd_Koleksi`,`Kd_Anggota`,`Tgl_Pinjam`,`Tgl_Kembali`,`Estimasi_Pengembalian`,`Denda_Keterlambatan`,`Status`) values 
+('20206.1',1,'10118227','2020-06-30','2020-06-30','2020-07-07',0,'DIKEMBALIKAN'),
+('20206.2',1,'10118227','2020-06-30','2020-07-01','2020-07-07',0,'DIKEMBALIKAN'),
+('20207.1',1,'10118227','2020-07-01',NULL,'2020-07-08',NULL,'DIPINJAM');
+
+/*Table structure for table `t_pengembalian_bayar` */
+
+DROP TABLE IF EXISTS `t_pengembalian_bayar`;
+
+CREATE TABLE `t_pengembalian_bayar` (
+  `Kd_Kehilangan` int(11) NOT NULL,
+  `Tanggal_Ganti` date DEFAULT NULL,
+  `Harga_Ganti` int(11) DEFAULT NULL,
+  `Kd_Peminjaman` char(10) DEFAULT NULL,
+  PRIMARY KEY (`Kd_Kehilangan`),
+  KEY `Kd_Peminjaman` (`Kd_Peminjaman`),
+  CONSTRAINT `t_pengembalian_bayar_ibfk_1` FOREIGN KEY (`Kd_Peminjaman`) REFERENCES `t_peminjaman` (`Kd_Peminjaman`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `t_pengembalian_bayar` */
+
+/*Table structure for table `t_pengembalian_ganti` */
+
+DROP TABLE IF EXISTS `t_pengembalian_ganti`;
+
+CREATE TABLE `t_pengembalian_ganti` (
+  `Kd_Kehilangan` int(11) NOT NULL AUTO_INCREMENT,
+  `Tanggal_Ganti` date DEFAULT NULL,
+  `Kode_Koleksi_Ganti` int(11) DEFAULT NULL,
+  `Kd_Peminjaman` char(10) DEFAULT NULL,
+  PRIMARY KEY (`Kd_Kehilangan`)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+/*Data for the table `t_pengembalian_ganti` */
 
 /*Table structure for table `t_terbitan_koleksi` */
 

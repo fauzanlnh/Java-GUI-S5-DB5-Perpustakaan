@@ -67,7 +67,7 @@ public class V_Pengembalian_Done extends javax.swing.JFrame {
         int Denda = 3000;
         try {
             Statement stmt = koneksi.createStatement();
-            String SelectPeminjaman = "SELECT Kd_Peminjaman, T_Peminjaman.Kd_Koleksi, Judul_Koleksi, Tgl_Pinjam,DATEDIFF('" + Tanggal + "', t_peminjaman.Estimasi_Pengembalian)  AS 'Keterlamabatan' "
+            String SelectPeminjaman = "SELECT Kd_Peminjaman, T_Peminjaman.Kd_Koleksi, Judul_Koleksi, Tgl_Pinjam,DATEDIFF('" + Tanggal + "', t_peminjaman.Estimasi_Pengembalian) AS 'Keterlamabatan' "
                     + "FROM T_Peminjaman , T_Koleksi "
                     + "WHERE T_Koleksi.Kd_Koleksi = T_Peminjaman.Kd_Koleksi AND "
                     + "Kd_Peminjaman = '" + Kd_Peminjaman + "'";
@@ -154,6 +154,10 @@ public class V_Pengembalian_Done extends javax.swing.JFrame {
         txtKodePeminjamana = new javax.swing.JTextField();
         lblService4 = new javax.swing.JLabel();
         txtTanggal = new com.toedter.calendar.JDateChooser();
+        btnDenda = new javax.swing.JPanel();
+        lblNoPol7 = new javax.swing.JLabel();
+        btnGantiBuku = new javax.swing.JPanel();
+        lblNoPol6 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -257,6 +261,63 @@ public class V_Pengembalian_Done extends javax.swing.JFrame {
         lblService4.setForeground(new java.awt.Color(51, 51, 51));
         lblService4.setText("Kode Peminjaman");
 
+        btnDenda.setBackground(new java.awt.Color(255, 255, 255));
+        btnDenda.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnDendaMouseClicked(evt);
+            }
+        });
+
+        lblNoPol7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblNoPol7.setForeground(new java.awt.Color(51, 51, 51));
+        lblNoPol7.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblNoPol7.setText("    < Denda");
+
+        javax.swing.GroupLayout btnDendaLayout = new javax.swing.GroupLayout(btnDenda);
+        btnDenda.setLayout(btnDendaLayout);
+        btnDendaLayout.setHorizontalGroup(
+            btnDendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(btnDendaLayout.createSequentialGroup()
+                .addComponent(lblNoPol7)
+                .addGap(0, 53, Short.MAX_VALUE))
+        );
+        btnDendaLayout.setVerticalGroup(
+            btnDendaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnDendaLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblNoPol7, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        btnGantiBuku.setBackground(new java.awt.Color(255, 255, 255));
+        btnGantiBuku.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnGantiBukuMouseClicked(evt);
+            }
+        });
+
+        lblNoPol6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblNoPol6.setForeground(new java.awt.Color(51, 51, 51));
+        lblNoPol6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblNoPol6.setText("Ganti Buku   >");
+
+        javax.swing.GroupLayout btnGantiBukuLayout = new javax.swing.GroupLayout(btnGantiBuku);
+        btnGantiBuku.setLayout(btnGantiBukuLayout);
+        btnGantiBukuLayout.setHorizontalGroup(
+            btnGantiBukuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnGantiBukuLayout.createSequentialGroup()
+                .addContainerGap(33, Short.MAX_VALUE)
+                .addComponent(lblNoPol6)
+                .addGap(20, 20, 20))
+        );
+        btnGantiBukuLayout.setVerticalGroup(
+            btnGantiBukuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(btnGantiBukuLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblNoPol6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout mainPanel3Layout = new javax.swing.GroupLayout(mainPanel3);
         mainPanel3.setLayout(mainPanel3Layout);
         mainPanel3Layout.setHorizontalGroup(
@@ -286,11 +347,20 @@ public class V_Pengembalian_Done extends javax.swing.JFrame {
                                         .addComponent(btnTambahPengembalian, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
                             .addComponent(tblDetServices1, javax.swing.GroupLayout.PREFERRED_SIZE, 510, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(28, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanel3Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(btnDenda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnGantiBuku, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
         mainPanel3Layout.setVerticalGroup(
             mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanel3Layout.createSequentialGroup()
-                .addGap(71, 71, 71)
+                .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(btnGantiBuku, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnDenda, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PanelDirectory3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23)
                 .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -303,8 +373,7 @@ public class V_Pengembalian_Done extends javax.swing.JFrame {
                     .addGroup(mainPanel3Layout.createSequentialGroup()
                         .addComponent(lblNoPol2, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(7, 7, 7)
-                        .addComponent(txtTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(4, 4, 4)))
+                        .addComponent(txtTanggal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(lblDetServices1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -353,6 +422,18 @@ public class V_Pengembalian_Done extends javax.swing.JFrame {
         Clear();
     }//GEN-LAST:event_btnClearActionPerformed
 
+    private void btnDendaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDendaMouseClicked
+        V_Pengembalian_Denda_Done VP = new V_Pengembalian_Denda_Done();
+        VP.show();
+        this.dispose();
+    }//GEN-LAST:event_btnDendaMouseClicked
+
+    private void btnGantiBukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGantiBukuMouseClicked
+        V_Pengembalian_GantiBuku_Done VP = new V_Pengembalian_GantiBuku_Done();
+        VP.show();
+        this.dispose();
+    }//GEN-LAST:event_btnGantiBukuMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -400,12 +481,16 @@ public class V_Pengembalian_Done extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelDirectory3;
     private javax.swing.JButton btnClear;
+    private javax.swing.JPanel btnDenda;
+    private javax.swing.JPanel btnGantiBuku;
     private javax.swing.JButton btnHapusSparepart;
     private javax.swing.JButton btnSubmit;
     private javax.swing.JButton btnTambahPengembalian;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel lblDetServices1;
     private javax.swing.JLabel lblNoPol2;
+    private javax.swing.JLabel lblNoPol6;
+    private javax.swing.JLabel lblNoPol7;
     private javax.swing.JLabel lblService4;
     private javax.swing.JPanel mainPanel3;
     private javax.swing.JScrollPane tblDetServices1;

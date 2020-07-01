@@ -676,7 +676,9 @@ public class HomeAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlMasterMouseEntered
 
     private void pnlMasterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlMasterMouseClicked
-
+        V_GantiPassword_Done MM = new V_GantiPassword_Done();
+        MM.show();
+        this.dispose();
     }//GEN-LAST:event_pnlMasterMouseClicked
 
     private void pnlLaporanMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlLaporanMouseExited
