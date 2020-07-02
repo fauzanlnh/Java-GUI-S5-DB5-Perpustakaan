@@ -690,6 +690,8 @@ public class HomeAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlLaporanMouseEntered
 
     private void pnlLaporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlLaporanMouseClicked
+        HomeData hd = new HomeData();
+        hd.show();
         this.dispose();
     }//GEN-LAST:event_pnlLaporanMouseClicked
 

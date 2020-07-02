@@ -346,7 +346,7 @@ public class V_Data_Koleksi extends javax.swing.JFrame {
             .addComponent(mainPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         mainPanel1.setBackground(new java.awt.Color(255, 255, 255));
         mainPanel1.setPreferredSize(new java.awt.Dimension(710, 673));

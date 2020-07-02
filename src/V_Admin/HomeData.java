@@ -4,9 +4,11 @@
  * and open the template in the editor.
  */
 package V_Admin;
+
 import Class.Login;
 import java.awt.Color;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author Fauzanlh
@@ -18,6 +20,7 @@ public class HomeData extends javax.swing.JFrame {
      */
     public HomeData() {
         initComponents();
+        this.setLocationRelativeTo(null);
     }
 
     /**
@@ -58,6 +61,7 @@ public class HomeData extends javax.swing.JFrame {
         jLabel18 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setUndecorated(true);
 
         mainPanel.setBackground(new java.awt.Color(255, 255, 255));
         mainPanel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -519,7 +523,9 @@ public class HomeData extends javax.swing.JFrame {
     }//GEN-LAST:event_minimizePanelMouseExited
 
     private void pnlHomeMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlHomeMouseClicked
-        this.requestFocus();
+        HomeAdmin HA = new HomeAdmin();
+        HA.show();
+        this.dispose();
     }//GEN-LAST:event_pnlHomeMouseClicked
 
     private void pnlHomeMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlHomeMouseEntered
@@ -531,7 +537,7 @@ public class HomeData extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlHomeMouseExited
 
     private void pnlPeminjamanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlPeminjamanMouseClicked
-        V_Peminjaman_Done VP = new V_Peminjaman_Done();
+        V_Data_Peminjaman VP = new V_Data_Peminjaman();
         VP.show();
     }//GEN-LAST:event_pnlPeminjamanMouseClicked
 
@@ -544,7 +550,7 @@ public class HomeData extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlPeminjamanMouseExited
 
     private void pnlAnggotaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlAnggotaMouseClicked
-        V_Anggota_Done VA = new V_Anggota_Done();
+        V_Data_Anggota VA = new V_Data_Anggota();
         VA.show();
     }//GEN-LAST:event_pnlAnggotaMouseClicked
 
@@ -557,7 +563,7 @@ public class HomeData extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlAnggotaMouseExited
 
     private void pnlPengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlPengembalianMouseClicked
-        V_Pengembalian_Done VP = new V_Pengembalian_Done();
+        V_Data_Pengembalian VP = new V_Data_Pengembalian();
         VP.show();
     }//GEN-LAST:event_pnlPengembalianMouseClicked
 
@@ -595,7 +601,8 @@ public class HomeData extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlLaporanMouseEntered
 
     private void pnlLaporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlLaporanMouseClicked
-        this.dispose();
+        V_Data_Koleksi VP = new V_Data_Koleksi();
+        VP.show();
     }//GEN-LAST:event_pnlLaporanMouseClicked
 
     /**

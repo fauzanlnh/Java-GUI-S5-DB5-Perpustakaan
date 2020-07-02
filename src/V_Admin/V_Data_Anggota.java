@@ -305,7 +305,7 @@ public class V_Data_Anggota extends javax.swing.JFrame {
             .addComponent(mainPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         mainPanel1.setBackground(new java.awt.Color(255, 255, 255));
         mainPanel1.setPreferredSize(new java.awt.Dimension(710, 673));
@@ -512,8 +512,6 @@ public class V_Data_Anggota extends javax.swing.JFrame {
     private javax.swing.JButton btnPrint1;
     private javax.swing.JButton btnUBah;
     private javax.swing.JButton btnUbah;
-    private javax.swing.JComboBox<String> cmbBerdasarkan;
-    private javax.swing.JComboBox<String> cmbBerdasarkan1;
     private javax.swing.JComboBox<String> cmbStatus;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
