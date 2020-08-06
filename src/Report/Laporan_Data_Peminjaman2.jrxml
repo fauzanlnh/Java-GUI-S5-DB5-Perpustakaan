@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" language="groovy" pageWidth="595" pageHeight="842" columnWidth="535" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="09514657-8795-43e9-a6d5-cd983450b271">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="bds" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="tgl" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="bln" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="thn" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[IF($P{bds} = 'Bulan') THEN
+SELECT T_Peminjaman.Kd_Peminjaman, T_Anggota.Nama_Anggota, T_Koleksi.Kd_Koleksi, T_Peminjaman.Estimasi_Pengembalian, T_Peminjaman.Status
+FROM T_Peminjaman JOIN T_Anggota USING(Kd_Anggota) JOIN T_Koleksi USING(Kd_Koleksi)
+WHERE tgl_pinjam BETWEEN $P{tgl} AND LAST_DAY($P{tgl});
+
+ELSEIF($P{bds} = 'Triwulan') THEN
+SELECT COUNT(Kd_Peminjaman)AS 'BanyakPeminjaman', Nama_Anggota
+FROM T_Peminjaman JOIN T_Anggota USING (Kd_Anggota)
+WHERE tgl_pinjam BETWEEN $P{tgl} AND LAST_DAY($P{tgl}+ INTERVAL 2 MONTH);
+
+ELSEIF($P{bds} = 'Semester') THEN
+SELECT COUNT(Kd_Peminjaman)AS 'BanyakPeminjaman', Nama_Anggota
+FROM T_Peminjaman JOIN T_Anggota USING (Kd_Anggota)
+WHERE tgl_pinjam BETWEEN $P{tgl} AND LAST_DAY($P{tgl}+ INTERVAL 5 MONTH);
+
+ELSEIF($P{bds} = 'Tahun') THEN
+SELECT COUNT(Kd_Peminjaman)AS 'BanyakPeminjaman', Nama_Anggota
+FROM T_Peminjaman JOIN T_Anggota USING (Kd_Anggota)
+WHERE tgl_pinjam BETWEEN $P{tgl} AND LAST_DAY($P{tgl}+ INTERVAL 11 MONTH);
+
+END IF;]]>
+	</queryString>
+	<field name="Kd_Peminjaman" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Nama_Anggota" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Kd_Koleksi" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Estimasi_Pengembalian" class="java.sql.Date">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="Status" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<variable name="Kd_Peminjaman_1" class="java.lang.Integer" resetType="Page" calculation="Count">
+		<variableExpression><![CDATA[$F{Kd_Peminjaman}]]></variableExpression>
+	</variable>
+	<background>
+		<band/>
+	</background>
+	<title>
+		<band height="72">
+			<frame>
+				<reportElement mode="Opaque" x="-20" y="-20" width="595" height="92" backcolor="#006699" uuid="fa489a2e-3407-417f-bd94-a0c550484f46"/>
+				<staticText>
+					<reportElement x="20" y="20" width="234" height="43" forecolor="#FFFFFF" uuid="26c30fdd-47a7-48bb-8dd9-a10694198ffa"/>
+					<textElement>
+						<font size="34" isBold="true"/>
+					</textElement>
+					<text><![CDATA[Perpustakaan]]></text>
+				</staticText>
+				<staticText>
+					<reportElement x="395" y="20" width="180" height="20" forecolor="#FFFFFF" uuid="eea8c9bb-9a01-4741-b467-166403b42168"/>
+					<textElement textAlignment="Right">
+						<font size="14" isBold="false"/>
+					</textElement>
+					<text><![CDATA[Data Peminjaman]]></text>
+				</staticText>
+				<textField>
+					<reportElement x="395" y="53" width="111" height="20" forecolor="#FFFFFF" uuid="57f02718-b61f-4f7a-bfbf-b7c494538f69"/>
+					<textElement textAlignment="Right">
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{bln}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="517" y="53" width="58" height="20" forecolor="#FFFFFF" uuid="584da2d9-a19c-4ede-aaf4-34c06a7d5527"/>
+					<textElement>
+						<font size="14" isBold="true"/>
+					</textElement>
+					<textFieldExpression><![CDATA[$P{thn}]]></textFieldExpression>
+				</textField>
+			</frame>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="13"/>
+	</pageHeader>
+	<columnHeader>
+		<band height="21">
+			<line>
+				<reportElement x="-20" y="20" width="595" height="1" forecolor="#666666" uuid="5de2147f-8653-4335-80a6-5fe983b0e4b0"/>
+			</line>
+			<staticText>
+				<reportElement mode="Opaque" x="0" y="0" width="75" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="7458772a-ba64-4f67-9098-4d6b4e96a5d1"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kode]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="75" y="0" width="207" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="f60fa876-e5d6-4313-aff0-77c73d13fb37"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Nama Anggota]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="282" y="0" width="82" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="5058d32b-5ce4-44f5-a249-08b9ca918592"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Kode Koleksi]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="364" y="0" width="103" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="55fa0766-3cc1-4a40-b6e9-2297f9db8d0a"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estimasi Kembali]]></text>
+			</staticText>
+			<staticText>
+				<reportElement mode="Opaque" x="467" y="0" width="88" height="20" forecolor="#006699" backcolor="#E6E6E6" uuid="79453e5b-011e-4d2a-a4b4-d03ac0028b4e"/>
+				<textElement textAlignment="Center">
+					<font size="12" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Status]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="20">
+			<line>
+				<reportElement positionType="FixRelativeToBottom" x="0" y="19" width="555" height="1" uuid="02db3ece-2c0b-4274-a4ac-90ef437dc955"/>
+			</line>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="0" y="0" width="75" height="20" uuid="13fa8cc2-351f-407c-8422-b9a65397ffeb"/>
+				<textElement textAlignment="Center">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Kd_Peminjaman}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="75" y="0" width="207" height="20" uuid="b757b0a5-f032-4f51-b995-c20d96efbf08"/>
+				<textElement>
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Nama_Anggota}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="282" y="0" width="82" height="20" uuid="ea2298d5-7db1-4e83-af1d-97efb5da6eee"/>
+				<textElement textAlignment="Center">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Kd_Koleksi}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="364" y="0" width="103" height="20" uuid="7a8b5406-2b75-4931-9081-f61feb77908c"/>
+				<textElement textAlignment="Center">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Estimasi_Pengembalian}]]></textFieldExpression>
+			</textField>
+			<textField isStretchWithOverflow="true">
+				<reportElement x="467" y="0" width="88" height="20" uuid="e57ede09-5dff-4e39-8668-5216271cc7fd"/>
+				<textElement textAlignment="Left">
+					<font size="11"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{Status}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band/>
+	</columnFooter>
+	<pageFooter>
+		<band height="17">
+			<textField>
+				<reportElement mode="Opaque" x="0" y="4" width="515" height="13" backcolor="#E6E6E6" uuid="695e8d18-7207-48b2-87dc-c9e5fb1a6782"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA["Page "+$V{PAGE_NUMBER}+" of"]]></textFieldExpression>
+			</textField>
+			<textField evaluationTime="Report">
+				<reportElement mode="Opaque" x="515" y="4" width="40" height="13" backcolor="#E6E6E6" uuid="34d17e70-e07c-4620-8d3a-bea3e2e3489f"/>
+				<textFieldExpression><![CDATA[" " + $V{PAGE_NUMBER}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="97" y="4" width="115" height="13" uuid="58d29ccf-0391-4615-b2b6-2d1f4cf8f1fa"/>
+				<textFieldExpression><![CDATA[$V{Kd_Peminjaman_1}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="4" width="97" height="13" uuid="41bb6ab9-7228-4668-ba17-6a220474889f"/>
+				<text><![CDATA[Total Peminjaman :]]></text>
+			</staticText>
+		</band>
+	</pageFooter>
+	<summary>
+		<band/>
+	</summary>
+</jasperReport>

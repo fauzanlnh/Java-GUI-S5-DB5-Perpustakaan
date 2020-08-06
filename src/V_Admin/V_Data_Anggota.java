@@ -6,13 +6,23 @@
 package V_Admin;
 
 import Class.DatabaseConnection;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import java.util.Locale;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperExportManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -98,12 +108,14 @@ public class V_Data_Anggota extends javax.swing.JFrame {
 
         try {
             Statement stmt = koneksi.createStatement();
-            String Ubah = "UPDATE T_Anggota SET Nama_Anggota = '" + NamaAnggota + "',Status = '" + Status + "',Email='" + Email + "' "
+            String Ubah = "UPDATE T_Anggota SET Nama_Anggota = '" + NamaAnggota + "',Status_Anggota = '" + Status + "',Email='" + Email + "' "
                     + "WHERE Kd_Anggota = '" + KodeAnggota + "'";
             int BerhasilUbah = stmt.executeUpdate(Ubah);
             if (BerhasilUbah > 0) {
                 JOptionPane.showMessageDialog(null, "DATA KOLEKSI BERHASIL DI UBAH");
                 System.out.println(Ubah);
+                showData();
+                UbahData.dispose();
             } else {
                 JOptionPane.showMessageDialog(null, "DATA KOLEKSI GAGAL DI UBAH");
             }
@@ -126,7 +138,7 @@ public class V_Data_Anggota extends javax.swing.JFrame {
         mainPanel2 = new javax.swing.JPanel();
         PanelDirectory1 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        btnClearPass = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
         btnUBah = new javax.swing.JButton();
         txtKode = new javax.swing.JTextField();
         lblNoPol1 = new javax.swing.JLabel();
@@ -163,7 +175,7 @@ public class V_Data_Anggota extends javax.swing.JFrame {
             .addGroup(PanelDirectory1Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(jLabel9)
-                .addContainerGap(144, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         PanelDirectory1Layout.setVerticalGroup(
             PanelDirectory1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -173,14 +185,14 @@ public class V_Data_Anggota extends javax.swing.JFrame {
                 .addGap(39, 39, 39))
         );
 
-        btnClearPass.setBackground(new java.awt.Color(240, 240, 240));
-        btnClearPass.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnClearPass.setForeground(new java.awt.Color(51, 51, 51));
-        btnClearPass.setText("Cancel");
-        btnClearPass.setBorder(null);
-        btnClearPass.addActionListener(new java.awt.event.ActionListener() {
+        btnCancel.setBackground(new java.awt.Color(240, 240, 240));
+        btnCancel.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        btnCancel.setForeground(new java.awt.Color(51, 51, 51));
+        btnCancel.setText("Cancel");
+        btnCancel.setBorder(null);
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClearPassActionPerformed(evt);
+                btnCancelActionPerformed(evt);
             }
         });
 
@@ -209,7 +221,6 @@ public class V_Data_Anggota extends javax.swing.JFrame {
         lblNoPol2.setForeground(new java.awt.Color(51, 51, 51));
         lblNoPol2.setText("Nama Anggota");
 
-        txtNama.setEditable(false);
         txtNama.setBackground(new java.awt.Color(255, 255, 255));
         txtNama.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         txtNama.setForeground(new java.awt.Color(51, 51, 51));
@@ -223,7 +234,6 @@ public class V_Data_Anggota extends javax.swing.JFrame {
         lblNoPol4.setForeground(new java.awt.Color(51, 51, 51));
         lblNoPol4.setText("E-Mail");
 
-        txtEmail.setEditable(false);
         txtEmail.setBackground(new java.awt.Color(255, 255, 255));
         txtEmail.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         txtEmail.setForeground(new java.awt.Color(51, 51, 51));
@@ -238,9 +248,6 @@ public class V_Data_Anggota extends javax.swing.JFrame {
         mainPanel2.setLayout(mainPanel2Layout);
         mainPanel2Layout.setHorizontalGroup(
             mainPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(mainPanel2Layout.createSequentialGroup()
-                .addComponent(PanelDirectory1, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(mainPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(mainPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -261,10 +268,11 @@ public class V_Data_Anggota extends javax.swing.JFrame {
                             .addComponent(txtKode, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtNama, javax.swing.GroupLayout.PREFERRED_SIZE, 226, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanel2Layout.createSequentialGroup()
-                        .addComponent(btnClearPass, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnUBah, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(142, Short.MAX_VALUE))
+            .addComponent(PanelDirectory1, javax.swing.GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE)
         );
         mainPanel2Layout.setVerticalGroup(
             mainPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -290,19 +298,21 @@ public class V_Data_Anggota extends javax.swing.JFrame {
                 .addGap(40, 40, 40)
                 .addGroup(mainPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnUBah, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnClearPass, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(86, Short.MAX_VALUE))
+                    .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(46, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout UbahDataLayout = new javax.swing.GroupLayout(UbahData.getContentPane());
         UbahData.getContentPane().setLayout(UbahDataLayout);
         UbahDataLayout.setHorizontalGroup(
             UbahDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 390, javax.swing.GroupLayout.PREFERRED_SIZE)
+            .addComponent(mainPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE)
         );
         UbahDataLayout.setVerticalGroup(
             UbahDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel2, javax.swing.GroupLayout.DEFAULT_SIZE, 460, Short.MAX_VALUE)
+            .addGroup(UbahDataLayout.createSequentialGroup()
+                .addComponent(mainPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 420, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -409,12 +419,12 @@ public class V_Data_Anggota extends javax.swing.JFrame {
                 .addGap(10, 10, 10)
                 .addComponent(txtCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(24, 24, 24)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 340, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnPrint1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUbah, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(83, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -437,7 +447,24 @@ public class V_Data_Anggota extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPrint1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPrint1MouseClicked
-        // TODO add your handling code here:
+        //EXPORT PDF        
+        try {
+            //Koneksi Database
+            com.mysql.jdbc.Connection c = (com.mysql.jdbc.Connection) DatabaseConnection.getKoneksi("localhost", "3306", "root", "", "db_kuliah_provis_perpustakaan");
+            //CETAK DATA
+            HashMap parameter = new HashMap();
+            //AMBIL FILE
+            File file = new File("src/Report/Laporan_Data_Anggota.jasper");
+            JasperReport jr = (JasperReport) JRLoader.loadObject(file);
+            JasperPrint jp = JasperFillManager.fillReport(jr, parameter, c);
+            //AGAR TIDAK MENGCLOSE APLIKASi
+            JasperViewer.viewReport(jp, false);
+            JasperViewer.setDefaultLookAndFeelDecorated(true);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "" + e);
+        }
+
     }//GEN-LAST:event_btnPrint1MouseClicked
 
     private void txtCariKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCariKeyReleased
@@ -451,7 +478,7 @@ public class V_Data_Anggota extends javax.swing.JFrame {
     private void btnUbahMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnUbahMouseClicked
         if (tblAnggota.getSelectedRow() >= 0) {
             UbahData.setLocationRelativeTo(null);
-            UbahData.setSize(400, 470);
+            UbahData.setSize(530, 430);
             UbahData.show();
             Move();
         } else {
@@ -460,10 +487,10 @@ public class V_Data_Anggota extends javax.swing.JFrame {
 
     }//GEN-LAST:event_btnUbahMouseClicked
 
-    private void btnClearPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearPassActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         UbahData.dispose();
         showData();
-    }//GEN-LAST:event_btnClearPassActionPerformed
+    }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnUBahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUBahActionPerformed
         UbahData();
@@ -508,7 +535,7 @@ public class V_Data_Anggota extends javax.swing.JFrame {
     private javax.swing.JPanel PanelDirectory;
     private javax.swing.JPanel PanelDirectory1;
     private javax.swing.JFrame UbahData;
-    private javax.swing.JButton btnClearPass;
+    private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnPrint1;
     private javax.swing.JButton btnUBah;
     private javax.swing.JButton btnUbah;

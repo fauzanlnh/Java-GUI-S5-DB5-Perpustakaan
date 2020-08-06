@@ -6,6 +6,7 @@
 package V_Admin;
 
 import Class.DatabaseConnection;
+import Class.LoginSession;
 import java.sql.*;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -30,6 +31,7 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
         CariKode.setSize(575, 475);
         CariKode.setLocationRelativeTo(null);
         setJDate();
+
     }
 
     public void setJDate() {
@@ -51,7 +53,7 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
         try {
             Statement stmt = koneksi.createStatement();
             query = "SELECT * FROM T_Koleksi, T_Peminjaman WHERE T_Koleksi.Kd_Koleksi = T_Peminjaman.Kd_Koleksi "
-                    + "AND Kd_Anggota LIKE '%" + txtCari.getText() + "%' OR Judul_Koleksi LIKE '%" + txtCari.getText() + "%' AND T_Peminjaman.Status = 'DIPINJAM'"
+                    + "AND Kd_Anggota LIKE '%" + txtCari.getText() + "%'  AND T_Peminjaman.Status = 'DIPINJAM'"
                     + "ORDER BY Judul_Koleksi ASC";
 
             ResultSet rs = stmt.executeQuery(query);
@@ -104,6 +106,8 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
         /* TIPE DATA GLOBAL */
         String[] data = new String[6];
         DefaultTableModel tableModel = (DefaultTableModel) tblPeminjaman.getModel();
+        String Kd_Peminjaman = tblPinjam.getValueAt(tblPinjam.getSelectedRow(), 1).toString();
+        System.out.println(Kd_Peminjaman);
         int Keterlambatan = 0, TotalDenda = 0, Denda = 3000, HargaBuku = 0;
         String tanggalMySQL = "yyyy-MM-dd";
         SimpleDateFormat fm = new SimpleDateFormat(tanggalMySQL);
@@ -120,7 +124,8 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
                 HargaBuku = rs.getInt("Harga");
                 System.out.println(HargaBuku);
             }
-            String SelectPeminjaman = "SELECT DATEDIFF('" + Tanggal + "', T_Peminjaman.Estimasi_Pengembalian)  AS 'Keterlambatan' FROM T_Peminjaman";
+            String SelectPeminjaman = "SELECT DATEDIFF('" + Tanggal + "', T_Peminjaman.Estimasi_Pengembalian)  AS 'Keterlambatan' FROM T_Peminjaman "
+                    + "WHERE Kd_Peminjaman= '" + Kd_Peminjaman + "'";
             ResultSet rs2 = stmt.executeQuery(SelectPeminjaman);
             if (rs2.next()) {
                 Keterlambatan = rs2.getInt("Keterlambatan");
@@ -151,6 +156,7 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
         String tanggalMySQL = "yyyy-MM-dd";
         SimpleDateFormat fm = new SimpleDateFormat(tanggalMySQL);
         String Tanggal = String.valueOf(fm.format(txtTanggal.getDate()));
+        System.out.println(Tanggal);
         String getKdPeminjaman = txtKodePeminjaman.getText();
         String NamaKoleksi = "";
         /* GET DATA */
@@ -159,11 +165,12 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
             String SelectKoleksi = "SELECT * FROM T_Koleksi,T_Peminjaman WHERE Kd_Peminjaman = '" + getKdPeminjaman + "' AND T_Koleksi.Kd_Koleksi = T_Peminjaman.Kd_Koleksi";
             ResultSet rs = stmt.executeQuery(SelectKoleksi);
             if (rs.next()) {
-                NamaKoleksi = rs.getString("Nama_Koleksi");
+                NamaKoleksi = rs.getString("Judul_Koleksi");
                 HargaBuku = rs.getInt("Harga");
                 System.out.println(HargaBuku);
             }
-            String SelectPeminjaman = "SELECT DATEDIFF('" + Tanggal + "', T_Peminjaman.Estimasi_Pengembalian)  AS 'Keterlambatan' FROM T_Peminjaman";
+            String SelectPeminjaman = "SELECT DATEDIFF('" + Tanggal + "', T_Peminjaman.Estimasi_Pengembalian)  AS 'Keterlambatan' FROM T_Peminjaman WHERE Kd_Peminjaman = '" + getKdPeminjaman + "'";
+
             ResultSet rs2 = stmt.executeQuery(SelectPeminjaman);
             if (rs2.next()) {
                 Keterlambatan = rs2.getInt("Keterlambatan");
@@ -184,7 +191,7 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
             System.out.println(e);
         }
     }
-
+/* INSERT DATABASE */
     public void TambahPengembalianDenda() {
         DefaultTableModel tableModel = (DefaultTableModel) tblPeminjaman.getModel();
         String tanggalMySQL = "yyyy-MM-dd";
@@ -211,7 +218,8 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
                     String Ubah_TKoleksi = "UPDATE T_Koleksi SET Status ='HILANG', Estimasi_Pengembalian=(NULL) WHERE Kd_Koleksi = '" + KdKoleksi + "'";
                     BUbahKoleksi = stmt.executeUpdate(Ubah_TKoleksi);
 
-                    String Ubah_TPeminjaman = "UPDATE T_Peminjaman SET Tgl_Kembali ='" + Tanggal + "', Denda_Keterlambatan ='" + tableModel.getValueAt(i, 4) + "', Status = 'HILANG', Estimasi_Pengembalian =(NULL) "
+                    String Ubah_TPeminjaman = "UPDATE T_Peminjaman SET Tgl_Kembali ='" + Tanggal + "', Denda_Keterlambatan ='" + tableModel.getValueAt(i, 4) + "', "
+                            + "Status = 'HILANG', Estimasi_Pengembalian =(NULL), Username ='" + LoginSession.getUsername() + "' "
                             + "WHERE Kd_Peminjaman = '" + tableModel.getValueAt(i, 0) + "'";
                     BUbahPeminjaman = stmt.executeUpdate(Ubah_TPeminjaman);
                     System.out.println("Baris Ke-" + i + "\n Kode Koleksi : " + getKdKoleksi);
@@ -228,6 +236,17 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
                 }
             } catch (SQLException e) {
                 System.out.println(e);
+            }
+        }
+    }
+
+    public void hapusTablePeminjaman() {
+        DefaultTableModel tableModel = (DefaultTableModel) tblPeminjaman.getModel();
+        int row = tblPeminjaman.getSelectedRow();
+        if (row >= 0) {
+            int ok = JOptionPane.showConfirmDialog(null, "Yakin Mau Hapus?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
+            if (ok == 0) {
+                tableModel.removeRow(row);
             }
         }
     }
@@ -255,10 +274,6 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
         mainPanel3 = new javax.swing.JPanel();
         PanelDirectory3 = new javax.swing.JPanel();
         jLabel9 = new javax.swing.JLabel();
-        btnPengembalian = new javax.swing.JPanel();
-        lblNoPol6 = new javax.swing.JLabel();
-        btnGantiBuku = new javax.swing.JPanel();
-        lblNoPol7 = new javax.swing.JLabel();
         lblNoPol9 = new javax.swing.JLabel();
         btnSubmit = new javax.swing.JButton();
         btnHapus = new javax.swing.JButton();
@@ -272,6 +287,10 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
         txtTanggal = new com.toedter.calendar.JDateChooser();
         lblNoPol2 = new javax.swing.JLabel();
         btnTambah = new javax.swing.JButton();
+        btnPengembalian = new javax.swing.JPanel();
+        lblNoPol6 = new javax.swing.JLabel();
+        btnPengembalian1 = new javax.swing.JPanel();
+        lblNoPol7 = new javax.swing.JLabel();
 
         mainPanel1.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -301,7 +320,7 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
 
         lblNoPol3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblNoPol3.setForeground(new java.awt.Color(51, 51, 51));
-        lblNoPol3.setText("Cari berdasarkan Kode Anggota / Nama Koleksi");
+        lblNoPol3.setText("Cari berdasarkan Kode Anggota");
 
         btnPilihKode.setBackground(new java.awt.Color(240, 240, 240));
         btnPilihKode.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
@@ -406,7 +425,7 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
             .addComponent(mainPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         mainPanel3.setBackground(new java.awt.Color(255, 255, 255));
         mainPanel3.setPreferredSize(new java.awt.Dimension(710, 673));
@@ -416,7 +435,7 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("Admin/Pengembalian Buku/Denda");
+        jLabel9.setText("Admin/Pengembalian Koleksi/Bayar");
 
         javax.swing.GroupLayout PanelDirectory3Layout = new javax.swing.GroupLayout(PanelDirectory3);
         PanelDirectory3.setLayout(PanelDirectory3Layout);
@@ -425,7 +444,7 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
             .addGroup(PanelDirectory3Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(jLabel9)
-                .addContainerGap(140, Short.MAX_VALUE))
+                .addContainerGap(126, Short.MAX_VALUE))
         );
         PanelDirectory3Layout.setVerticalGroup(
             PanelDirectory3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -433,63 +452,6 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
                 .addContainerGap(29, Short.MAX_VALUE)
                 .addComponent(jLabel9)
                 .addGap(39, 39, 39))
-        );
-
-        btnPengembalian.setBackground(new java.awt.Color(255, 255, 255));
-        btnPengembalian.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnPengembalianMouseClicked(evt);
-            }
-        });
-
-        lblNoPol6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblNoPol6.setForeground(new java.awt.Color(51, 51, 51));
-        lblNoPol6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblNoPol6.setText("Pengembalian   >");
-
-        javax.swing.GroupLayout btnPengembalianLayout = new javax.swing.GroupLayout(btnPengembalian);
-        btnPengembalian.setLayout(btnPengembalianLayout);
-        btnPengembalianLayout.setHorizontalGroup(
-            btnPengembalianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnPengembalianLayout.createSequentialGroup()
-                .addContainerGap(33, Short.MAX_VALUE)
-                .addComponent(lblNoPol6)
-                .addGap(20, 20, 20))
-        );
-        btnPengembalianLayout.setVerticalGroup(
-            btnPengembalianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(btnPengembalianLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblNoPol6, javax.swing.GroupLayout.DEFAULT_SIZE, 53, Short.MAX_VALUE)
-                .addContainerGap())
-        );
-
-        btnGantiBuku.setBackground(new java.awt.Color(255, 255, 255));
-        btnGantiBuku.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnGantiBukuMouseClicked(evt);
-            }
-        });
-
-        lblNoPol7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        lblNoPol7.setForeground(new java.awt.Color(51, 51, 51));
-        lblNoPol7.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        lblNoPol7.setText("    < Ganti Buku");
-
-        javax.swing.GroupLayout btnGantiBukuLayout = new javax.swing.GroupLayout(btnGantiBuku);
-        btnGantiBuku.setLayout(btnGantiBukuLayout);
-        btnGantiBukuLayout.setHorizontalGroup(
-            btnGantiBukuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(btnGantiBukuLayout.createSequentialGroup()
-                .addComponent(lblNoPol7)
-                .addGap(0, 53, Short.MAX_VALUE))
-        );
-        btnGantiBukuLayout.setVerticalGroup(
-            btnGantiBukuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnGantiBukuLayout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblNoPol7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
         );
 
         lblNoPol9.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
@@ -582,6 +544,64 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
             }
         });
 
+        btnPengembalian.setBackground(new java.awt.Color(255, 255, 255));
+        btnPengembalian.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnPengembalianMouseClicked(evt);
+            }
+        });
+
+        lblNoPol6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblNoPol6.setForeground(new java.awt.Color(51, 51, 51));
+        lblNoPol6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblNoPol6.setText("Ganti Buku >");
+
+        javax.swing.GroupLayout btnPengembalianLayout = new javax.swing.GroupLayout(btnPengembalian);
+        btnPengembalian.setLayout(btnPengembalianLayout);
+        btnPengembalianLayout.setHorizontalGroup(
+            btnPengembalianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, btnPengembalianLayout.createSequentialGroup()
+                .addContainerGap(33, Short.MAX_VALUE)
+                .addComponent(lblNoPol6)
+                .addGap(20, 20, 20))
+        );
+        btnPengembalianLayout.setVerticalGroup(
+            btnPengembalianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(btnPengembalianLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblNoPol6, javax.swing.GroupLayout.DEFAULT_SIZE, 48, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
+        btnPengembalian1.setBackground(new java.awt.Color(255, 255, 255));
+        btnPengembalian1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnPengembalian1MouseClicked(evt);
+            }
+        });
+
+        lblNoPol7.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lblNoPol7.setForeground(new java.awt.Color(51, 51, 51));
+        lblNoPol7.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        lblNoPol7.setText("< Pengembalian");
+
+        javax.swing.GroupLayout btnPengembalian1Layout = new javax.swing.GroupLayout(btnPengembalian1);
+        btnPengembalian1.setLayout(btnPengembalian1Layout);
+        btnPengembalian1Layout.setHorizontalGroup(
+            btnPengembalian1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(btnPengembalian1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblNoPol7)
+                .addContainerGap(47, Short.MAX_VALUE))
+        );
+        btnPengembalian1Layout.setVerticalGroup(
+            btnPengembalian1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(btnPengembalian1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblNoPol7, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
+                .addContainerGap())
+        );
+
         javax.swing.GroupLayout mainPanel3Layout = new javax.swing.GroupLayout(mainPanel3);
         mainPanel3.setLayout(mainPanel3Layout);
         mainPanel3Layout.setHorizontalGroup(
@@ -619,7 +639,7 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
             .addGroup(mainPanel3Layout.createSequentialGroup()
                 .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addGroup(mainPanel3Layout.createSequentialGroup()
-                        .addComponent(btnGantiBuku, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnPengembalian1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(btnPengembalian, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(PanelDirectory3, javax.swing.GroupLayout.PREFERRED_SIZE, 557, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -628,9 +648,11 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
         mainPanel3Layout.setVerticalGroup(
             mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanel3Layout.createSequentialGroup()
-                .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnPengembalian, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btnGantiBuku, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(mainPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(btnPengembalian1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(PanelDirectory3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -660,7 +682,7 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
                     .addGroup(mainPanel3Layout.createSequentialGroup()
                         .addGap(22, 22, 22)
                         .addComponent(txtKasir, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(0, 25, Short.MAX_VALUE))
+                .addGap(0, 30, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -681,18 +703,6 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnPengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPengembalianMouseClicked
-        V_Pengembalian_Done VP = new V_Pengembalian_Done();
-        VP.show();
-        this.dispose();
-    }//GEN-LAST:event_btnPengembalianMouseClicked
-
-    private void btnGantiBukuMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnGantiBukuMouseClicked
-        V_Pengembalian_GantiBuku_Done VP = new V_Pengembalian_GantiBuku_Done();
-        VP.show();
-        this.dispose();
-    }//GEN-LAST:event_btnGantiBukuMouseClicked
-
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
         int ok = JOptionPane.showConfirmDialog(null, "Data Yang Dimasukkan Benar?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
         if (ok == 0) {
@@ -701,7 +711,7 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
     }//GEN-LAST:event_btnSubmitActionPerformed
 
     private void btnHapusMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnHapusMouseClicked
-        // hapusTablePeminjaman();
+        hapusTablePeminjaman();
     }//GEN-LAST:event_btnHapusMouseClicked
 
     private void btnCariKodePeminjamanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCariKodePeminjamanActionPerformed
@@ -736,6 +746,19 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
         CariKode.dispose();
         txtCari.setText("");
     }//GEN-LAST:event_btnCancelCariActionPerformed
+
+    private void btnPengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPengembalianMouseClicked
+        V_Pengembalian_GantiBuku_Done VP = new V_Pengembalian_GantiBuku_Done();
+        VP.show();
+        this.dispose();
+    }//GEN-LAST:event_btnPengembalianMouseClicked
+
+    private void btnPengembalian1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPengembalian1MouseClicked
+        V_Pengembalian_Done VP = new V_Pengembalian_Done();
+        VP.show();
+        this.dispose();
+    }//GEN-LAST:event_btnPengembalian1MouseClicked
+    int baris;
 
     /**
      * @param args the command line arguments
@@ -780,9 +803,9 @@ public class V_Pengembalian_Denda_Done extends javax.swing.JFrame {
     private javax.swing.JButton btnCancelCari;
     private javax.swing.JButton btnCariKodePeminjaman;
     private javax.swing.JButton btnClear;
-    private javax.swing.JPanel btnGantiBuku;
     private javax.swing.JButton btnHapus;
     private javax.swing.JPanel btnPengembalian;
+    private javax.swing.JPanel btnPengembalian1;
     private javax.swing.JButton btnPilihKode;
     private javax.swing.JButton btnSubmit;
     private javax.swing.JButton btnTambah;

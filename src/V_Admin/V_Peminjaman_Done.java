@@ -33,10 +33,8 @@ public class V_Peminjaman_Done extends javax.swing.JFrame {
         initComponents();
         koneksi = DatabaseConnection.getKoneksi("localhost", "3306", "root", "", "DB_Kuliah_Provis_Perpustakaan");
         this.setLocationRelativeTo(null);
+        txtTanggal.setEnabled(false);
         setJDate();
-        System.out.println(Estimasi());
-        System.out.println(Bulan);
-        System.out.println(Tahun);
     }
 
     public void setJDate() {
@@ -65,26 +63,26 @@ public class V_Peminjaman_Done extends javax.swing.JFrame {
 
     public void hapusTablePeminjaman() {
         DefaultTableModel tableModel = (DefaultTableModel) tblPeminjaman.getModel();
-        String[] data = new String[1];
         int getrow = tblPeminjaman.getSelectedRow();
-        int BanyakKode = 0;
+        String BanyakKode = "";
         if (getrow >= 0) {
             int ok = JOptionPane.showConfirmDialog(null, "Yakin Mau Hapus?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
             if (ok == 0) {
                 tableModel.removeRow(getrow);
                 try {
                     Statement stmt = koneksi.createStatement();
-                    String SelectPeminjaman = "SELECT COUNT(Kd_Peminjaman) AS 'Banyak_Kode' FROM T_Peminjaman WHERE MONTH(Tgl_Pinjam) = '" + Bulan + "' AND YEAR(Tgl_Pinjam) = '" + Tahun + "'";
+                    String SelectPeminjaman = "SELECT (Kd_Peminjaman) AS 'Banyak_Kode' FROM T_Peminjaman WHERE MONTH(Tgl_Pinjam) = '" + Bulan + "' AND YEAR(Tgl_Pinjam) = '" + Tahun + "' ORDER BY Banyak_Kode DESC LIMIT 1";
                     ResultSet rs2 = stmt.executeQuery(SelectPeminjaman);
                     if (rs2.next()) {
-                        BanyakKode = rs2.getInt("Banyak_Kode");
+                        BanyakKode = rs2.getString("Banyak_Kode");
                     }
+                    String[] kode = BanyakKode.split("-");
+                    String bagian2 = kode[1];
+                    int intBagian2 = Integer.valueOf(bagian2);
                     for (int i = 0; i < tableModel.getRowCount(); i++) {
                         tblPeminjaman.setValueAt(i + 1, i, 0);
                         int no = (int) tblPeminjaman.getValueAt(i, 0);
-                        BanyakKode += no;
-                        tblPeminjaman.setValueAt("" + Tahun + Bulan + "." + BanyakKode, i, 1);
-                        BanyakKode = 1;
+                        tblPeminjaman.setValueAt("" + Tahun + Bulan + "-" + (intBagian2 + no), i, 1);
                     }
                 } catch (SQLException e) {
                     System.out.println(e);
@@ -97,9 +95,8 @@ public class V_Peminjaman_Done extends javax.swing.JFrame {
         String KdKoleksi = txtKodeKoleksi.getText().toUpperCase();
         DefaultTableModel tableModel = (DefaultTableModel) tblPeminjaman.getModel();
         String[] data = new String[4];
-        String NamaKoleksi = "";
-        int BanyakKode = 0;
-        String SelectPeminjaman, SelectKoleksi;
+        String NamaKoleksi = "", BanyakKode = "", SelectPeminjaman, SelectKoleksi;
+
         int no = tableModel.getRowCount() + 1;
         String No = Integer.toString(no);
         if (KdKoleksi.equals("")) {
@@ -111,18 +108,27 @@ public class V_Peminjaman_Done extends javax.swing.JFrame {
                 ResultSet rs = stmt.executeQuery(SelectKoleksi);
                 if (rs.next()) {
                     NamaKoleksi = rs.getString("Judul_Koleksi");
-                    SelectPeminjaman = "SELECT COUNT(Kd_Peminjaman) AS 'Banyak_Kode' FROM T_Peminjaman WHERE MONTH(Tgl_Pinjam) = '" + Bulan + "' AND YEAR(Tgl_Pinjam) = '" + Tahun + "'";
+                    SelectPeminjaman = "SELECT (Kd_Peminjaman) AS 'Banyak_Kode' FROM T_Peminjaman WHERE MONTH(Tgl_Pinjam) = '" + Bulan + "' AND YEAR(Tgl_Pinjam) = '" + Tahun + "' ORDER BY Banyak_Kode DESC LIMIT 1";
                     ResultSet rs2 = stmt.executeQuery(SelectPeminjaman);
                     if (rs2.next()) {
-                        BanyakKode = rs2.getInt("Banyak_Kode");
-                        System.out.println(BanyakKode);
+                        BanyakKode = rs2.getString("Banyak_Kode");
                     }
-                    BanyakKode += no;
+                    String[] kode = BanyakKode.split("-");
+                    String bagian2 = kode[1];
+                    int intBagian2 = Integer.valueOf(bagian2);
+                    String strBagina2 = String.valueOf(intBagian2);
+                    System.out.println(strBagina2);
                     data[0] = No;
-                    data[1] = "" + Tahun + Bulan + "." + BanyakKode;
+                    System.out.println(bagian2.length());
+                    if (strBagina2.length() == 1) {
+                        data[1] = "" + Tahun + Bulan + "-" + "00" + (intBagian2 + no);
+                    } else if (strBagina2.length() == 2) {
+                        data[1] = "" + Tahun + Bulan + "-" + "0" + (intBagian2 + no);
+                    }
                     data[2] = KdKoleksi;
                     data[3] = NamaKoleksi;
                     tableModel.addRow(data);
+                    txtKodeKoleksi.setText("");
                 } else {
                     JOptionPane.showMessageDialog(null, "KODE KOLEKSI SALAH ATAU BUKU TIDAK TERSEDIA, PERIKSA KEMBALI KODE KOLEKSI");
                     txtKodeKoleksi.requestFocus();
@@ -160,20 +166,22 @@ public class V_Peminjaman_Done extends javax.swing.JFrame {
                     String JumlahPinjaman = "SELECT COUNT(Kd_Peminjaman) AS Total_Pinjaman, Status_Anggota "
                             + "FROM T_Peminjaman,T_Anggota "
                             + "WHERE T_Peminjaman.Kd_Anggota = T_Anggota.Kd_Anggota "
-                            + "AND T_Anggota.Kd_Anggota = '" + KodeAnggota + "'";
+                            + "AND T_Anggota.Kd_Anggota = '" + KodeAnggota + "' AND Status='DIPINJAM'";
                     ResultSet rs2 = stmt.executeQuery(JumlahPinjaman);
                     if (rs2.next()) {
                         int Total_Pinjaman = rs2.getInt("Total_Pinjaman");
                         String Status = rs2.getString("Status_Anggota");
-                        if ((Status.equals("BIASA") && Total_Pinjaman <= 3) || (Status.equals("KHUSUS") && Total_Pinjaman <= 5)) {
+                        System.out.println(Status);
+                        System.out.println(Total_Pinjaman);
+                        if ((Status.equals("BIASA") && Total_Pinjaman < 3) || (Status.equals("KHUSUS") && Total_Pinjaman < 5)) {
                             for (int i = 0; i < tableModel.getRowCount(); i++) {
                                 String TambahPinjaman = "INSERT INTO T_Peminjaman (Kd_Peminjaman, Kd_Koleksi, Kd_Anggota, Tgl_Pinjam, Estimasi_Pengembalian, Status) VALUES"
                                         + "('" + tableModel.getValueAt(i, 1) + "', '" + tableModel.getValueAt(i, 2) + "', '" + KodeAnggota + "', '" + Tanggal + "', '" + Estimasi() + "', 'DIPINJAM')";
                                 String UpdateKoleksi = "UPDATE T_Koleksi SET STATUS = 'DIPINJAM', Estimasi_Pengembalian='" + Estimasi() + "' WHERE Kd_Koleksi='" + tableModel.getValueAt(i, 2) + "'";
                                 BerhasilTambah = stmt.executeUpdate(TambahPinjaman);
                                 BerhasilUpdate = stmt.executeUpdate(UpdateKoleksi);
-                                System.out.println(TambahPinjaman);
-                                System.out.println(UpdateKoleksi);
+                                //System.out.println(TambahPinjaman);
+                                //System.out.println(UpdateKoleksi);
                             }
                             if (BerhasilTambah > 0 && BerhasilUpdate > 0) {
                                 JOptionPane.showMessageDialog(null, "PEMINJAMAN BERHASIL DIMASUKKAN");

@@ -27,41 +27,10 @@ public class V_Koleksi_Done extends javax.swing.JFrame {
         initComponents();
         this.setLocationRelativeTo(null);
         koneksi = DatabaseConnection.getKoneksi("localhost", "3306", "root", "", "db_kuliah_provis_perpustakaan");
-        setCMBJenis();
-        setCMBTipe();
         setCMBKategori();
-        setCMBTerbitan();
     }
 
     //SET CMB
-    public void setCMBJenis() {
-        try {
-            String SelectKD = "SELECT * FROM T_Jenis_Koleksi";
-            Statement st = koneksi.createStatement();
-            ResultSet rs = st.executeQuery(SelectKD);
-            while (rs.next()) {
-                String NamaJenisKoleksi = rs.getString("Nama_Jenis");
-                cmbJenis.addItem(NamaJenisKoleksi);
-            }
-        } catch (SQLException e) {
-
-        }
-    }
-
-    public void setCMBTipe() {
-        try {
-            String SelectKD = "SELECT * FROM T_Tipe_Koleksi";
-            Statement st = koneksi.createStatement();
-            ResultSet rs = st.executeQuery(SelectKD);
-            while (rs.next()) {
-                String NamaTipeKoleksi = rs.getString("Nama_Tipe");
-                cmbTipe.addItem(NamaTipeKoleksi);
-            }
-        } catch (SQLException e) {
-
-        }
-    }
-
     public void setCMBKategori() {
         try {
             String SelectKD = "SELECT * FROM T_Kategori_Koleksi";
@@ -76,20 +45,6 @@ public class V_Koleksi_Done extends javax.swing.JFrame {
         }
     }
 
-    public void setCMBTerbitan() {
-        try {
-            String SelectKD = "SELECT * FROM T_Terbitan_Koleksi";
-            Statement st = koneksi.createStatement();
-            ResultSet rs = st.executeQuery(SelectKD);
-            while (rs.next()) {
-                String NamaTerbitanKoleksi = rs.getString("Nama_Terbitan");
-                cmbTerbitan.addItem(NamaTerbitanKoleksi);
-            }
-        } catch (SQLException e) {
-
-        }
-    }
-
     public void Clear() {
         txtJudul.setText("");
         txtNamaPengarang.setText("");
@@ -97,10 +52,7 @@ public class V_Koleksi_Done extends javax.swing.JFrame {
         txtTahunTerbit.setText("");
         txtNoRak.setText("");
         txtHarga.setText("");
-        cmbJenis.setSelectedIndex(0);
-        cmbTipe.setSelectedIndex(0);
         cmbKategori.setSelectedIndex(0);
-        cmbTerbitan.setSelectedIndex(0);
     }
 
     public void SimpanData() {
@@ -110,11 +62,8 @@ public class V_Koleksi_Done extends javax.swing.JFrame {
         String TahunTerbit = txtTahunTerbit.getText().toUpperCase();
         String NoRak = txtNoRak.getText().toUpperCase();
         String Harga = txtHarga.getText().toUpperCase();
-        int KdJenis = cmbJenis.getSelectedIndex();
-        int KdTipe = cmbTipe.getSelectedIndex();
         int KdKategori = cmbKategori.getSelectedIndex();
-        int KdTerbitan = cmbTerbitan.getSelectedIndex();
-        if (Judul.equals("") && Pengarang.equals("") && Penerbit.equals("") && TahunTerbit.equals("") && NoRak.equals("") && Harga.equals("") && KdJenis == 0 && KdTipe == 0 && KdKategori == 0 && KdTerbitan == 0) {
+        if (Judul.equals("") && Pengarang.equals("") && Penerbit.equals("") && TahunTerbit.equals("") && NoRak.equals("") && Harga.equals("") && KdKategori == 0) {
             JOptionPane.showMessageDialog(null, "FORM BELUM DI ISI");
             txtJudul.requestFocus();
         } else if (Judul.equals("")) {
@@ -135,23 +84,14 @@ public class V_Koleksi_Done extends javax.swing.JFrame {
         } else if (Harga.equals("")) {
             JOptionPane.showMessageDialog(null, "HARGA BUKU TIDAK BOLEH KOSONG");
             txtHarga.requestFocus();
-        } else if (KdJenis == 0) {
-            JOptionPane.showMessageDialog(null, "JENIS BUKU TIDAK BOLEH KOSONG");
-            cmbJenis.requestFocus();
-        } else if (KdTipe == 0) {
-            JOptionPane.showMessageDialog(null, "TIPE BUKU TIDAK BOLEH KOSONG");
-            cmbTipe.requestFocus();
         } else if (KdKategori == 0) {
             JOptionPane.showMessageDialog(null, "KATEGORI BUKU TIDAK BOLEH KOSONG");
             cmbKategori.requestFocus();
-        } else if (KdTerbitan == 0) {
-            JOptionPane.showMessageDialog(null, "JENIS TERBITAN BUKU TIDAK BOLEH KOSONG");
-            cmbTerbitan.requestFocus();
         } else {
             try {
                 Statement stmt = koneksi.createStatement();
-                String TambahKoleksi = "INSERT INTO T_Koleksi (Judul_Koleksi, Nama_Pengarang, Nama_Penerbit, Tahun_Terbit, No_Rak, Kd_Jenis, Kd_Tipe, Kd_Kategori, Kd_Terbitan, Status, Harga) VALUES "
-                        + "('" + Judul + "','" + Pengarang + "','" + Penerbit + "','" + TahunTerbit + "','" + NoRak + "','" + KdJenis + "','" + KdTipe + "','" + KdKategori + "','" + KdTerbitan + "','TERSEDIA','" + Harga + "')";
+                String TambahKoleksi = "INSERT INTO T_Koleksi (Judul_Koleksi, Nama_Pengarang, Nama_Penerbit, Tahun_Terbit, No_Rak, Kd_Kategori, Status, Harga) VALUES "
+                        + "('" + Judul + "','" + Pengarang + "','" + Penerbit + "','" + TahunTerbit + "','" + NoRak + "','" + KdKategori + "','TERSEDIA','" + Harga + "')";
                 int BerhasilTambah = stmt.executeUpdate(TambahKoleksi);
                 if (BerhasilTambah > 0) {
                     JOptionPane.showMessageDialog(null, "KOLEKSI BARU BERHASIL DIMASUKKAN");
@@ -186,19 +126,13 @@ public class V_Koleksi_Done extends javax.swing.JFrame {
         txtNamaPengarang = new javax.swing.JTextField();
         btnClear = new javax.swing.JButton();
         txtKasir = new javax.swing.JLabel();
-        lblService1 = new javax.swing.JLabel();
         lblNoPol10 = new javax.swing.JLabel();
         txtNamaPenerbit = new javax.swing.JTextField();
         lblService2 = new javax.swing.JLabel();
-        cmbJenis = new javax.swing.JComboBox<>();
-        lblService4 = new javax.swing.JLabel();
         lblService5 = new javax.swing.JLabel();
-        lblService6 = new javax.swing.JLabel();
         lblService7 = new javax.swing.JLabel();
         txtHarga = new javax.swing.JTextField();
-        cmbTipe = new javax.swing.JComboBox<>();
         cmbKategori = new javax.swing.JComboBox<>();
-        cmbTerbitan = new javax.swing.JComboBox<>();
         txtTahunTerbit = new javax.swing.JTextField();
         txtNoRak = new javax.swing.JTextField();
 
@@ -278,10 +212,6 @@ public class V_Koleksi_Done extends javax.swing.JFrame {
         txtKasir.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         txtKasir.setForeground(new java.awt.Color(51, 51, 51));
 
-        lblService1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblService1.setForeground(new java.awt.Color(51, 51, 51));
-        lblService1.setText("Jenis");
-
         lblNoPol10.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblNoPol10.setForeground(new java.awt.Color(51, 51, 51));
         lblNoPol10.setText("Nama Penerbit");
@@ -295,22 +225,9 @@ public class V_Koleksi_Done extends javax.swing.JFrame {
         lblService2.setForeground(new java.awt.Color(51, 51, 51));
         lblService2.setText("Tahun Terbit");
 
-        cmbJenis.setBackground(new java.awt.Color(255, 255, 255));
-        cmbJenis.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        cmbJenis.setForeground(new java.awt.Color(51, 51, 51));
-        cmbJenis.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-" }));
-
-        lblService4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblService4.setForeground(new java.awt.Color(51, 51, 51));
-        lblService4.setText("Tipe");
-
         lblService5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblService5.setForeground(new java.awt.Color(51, 51, 51));
         lblService5.setText("Kategori");
-
-        lblService6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblService6.setForeground(new java.awt.Color(51, 51, 51));
-        lblService6.setText("Terbitan");
 
         lblService7.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblService7.setForeground(new java.awt.Color(51, 51, 51));
@@ -321,20 +238,10 @@ public class V_Koleksi_Done extends javax.swing.JFrame {
         txtHarga.setForeground(new java.awt.Color(51, 51, 51));
         txtHarga.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
 
-        cmbTipe.setBackground(new java.awt.Color(255, 255, 255));
-        cmbTipe.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        cmbTipe.setForeground(new java.awt.Color(51, 51, 51));
-        cmbTipe.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-" }));
-
         cmbKategori.setBackground(new java.awt.Color(255, 255, 255));
         cmbKategori.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         cmbKategori.setForeground(new java.awt.Color(51, 51, 51));
         cmbKategori.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-" }));
-
-        cmbTerbitan.setBackground(new java.awt.Color(255, 255, 255));
-        cmbTerbitan.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        cmbTerbitan.setForeground(new java.awt.Color(51, 51, 51));
-        cmbTerbitan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-" }));
 
         txtTahunTerbit.setBackground(new java.awt.Color(255, 255, 255));
         txtTahunTerbit.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
@@ -356,46 +263,36 @@ public class V_Koleksi_Done extends javax.swing.JFrame {
             .addGroup(mainPanel3Layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(mainPanel3Layout.createSequentialGroup()
-                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblNoPol8)
-                            .addComponent(lblNoPol9)
-                            .addComponent(lblNoPol10)
-                            .addComponent(lblService2)
-                            .addComponent(lblService3)
-                            .addComponent(lblService1)
-                            .addComponent(lblService7))
-                        .addGap(18, 18, 18)
-                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanel3Layout.createSequentialGroup()
+                                .addComponent(lblService2)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 41, Short.MAX_VALUE)
+                                .addComponent(txtTahunTerbit, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(111, 111, 111))
+                            .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(mainPanel3Layout.createSequentialGroup()
-                                .addComponent(txtNoRak, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(lblService5))
-                            .addGroup(mainPanel3Layout.createSequentialGroup()
-                                .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(txtTahunTerbit, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(cmbJenis, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(txtHarga, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(18, 18, 18)
                                 .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblService4)
-                                    .addComponent(lblService6)))
-                            .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtNamaPenerbit, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
-                                .addComponent(txtNamaPengarang, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtJudul, javax.swing.GroupLayout.Alignment.LEADING)))))
-                .addGap(6, 6, 6)
-                .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(cmbTerbitan, 0, 170, Short.MAX_VALUE)
-                    .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                        .addComponent(cmbKategori, 0, 170, Short.MAX_VALUE)
-                        .addComponent(cmbTipe, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(txtKasir, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+                                    .addComponent(lblNoPol8)
+                                    .addComponent(lblNoPol9)
+                                    .addComponent(lblNoPol10)
+                                    .addComponent(lblService3)
+                                    .addComponent(lblService7))
+                                .addGap(18, 18, 18)
+                                .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtNoRak, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnSubmit, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNamaPenerbit, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                                    .addComponent(txtNamaPengarang)
+                                    .addComponent(txtJudul)
+                                    .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cmbKategori, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtKasir, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addGroup(mainPanel3Layout.createSequentialGroup()
+                        .addComponent(lblService5)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
         mainPanel3Layout.setVerticalGroup(
             mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -420,43 +317,27 @@ public class V_Koleksi_Done extends javax.swing.JFrame {
                         .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblNoPol10)
                             .addComponent(txtNamaPenerbit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
                         .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(mainPanel3Layout.createSequentialGroup()
-                                .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(mainPanel3Layout.createSequentialGroup()
-                                        .addComponent(lblService2)
-                                        .addGap(23, 23, 23))
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanel3Layout.createSequentialGroup()
-                                        .addComponent(cmbTipe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)))
-                                .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(lblService3)
-                                        .addComponent(lblService5)
-                                        .addComponent(txtNoRak, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(cmbKategori, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(mainPanel3Layout.createSequentialGroup()
-                                        .addGap(18, 18, Short.MAX_VALUE)
-                                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(lblService1)
-                                            .addComponent(lblService6)
-                                            .addComponent(cmbJenis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(18, 18, 18)
-                                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(lblService7)
-                                            .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                        .addGap(28, 28, 28))
-                                    .addGroup(mainPanel3Layout.createSequentialGroup()
-                                        .addGap(18, 18, 18)
-                                        .addComponent(cmbTerbitan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(lblService5)
+                                .addGap(18, 18, 18))
                             .addGroup(mainPanel3Layout.createSequentialGroup()
-                                .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(txtTahunTerbit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblService4))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(cmbKategori, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)))
+                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtTahunTerbit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblService2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblService3)
+                            .addComponent(txtNoRak, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblService7)
+                            .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(28, 28, 28)
                         .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -471,7 +352,7 @@ public class V_Koleksi_Done extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(mainPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 610, Short.MAX_VALUE)
+            .addComponent(mainPanel3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 610, Short.MAX_VALUE)
         );
 
         pack();
@@ -528,20 +409,14 @@ public class V_Koleksi_Done extends javax.swing.JFrame {
     private javax.swing.JPanel PanelDirectory3;
     private javax.swing.JButton btnClear;
     private javax.swing.JButton btnSubmit;
-    private javax.swing.JComboBox<String> cmbJenis;
     private javax.swing.JComboBox<String> cmbKategori;
-    private javax.swing.JComboBox<String> cmbTerbitan;
-    private javax.swing.JComboBox<String> cmbTipe;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel lblNoPol10;
     private javax.swing.JLabel lblNoPol8;
     private javax.swing.JLabel lblNoPol9;
-    private javax.swing.JLabel lblService1;
     private javax.swing.JLabel lblService2;
     private javax.swing.JLabel lblService3;
-    private javax.swing.JLabel lblService4;
     private javax.swing.JLabel lblService5;
-    private javax.swing.JLabel lblService6;
     private javax.swing.JLabel lblService7;
     private javax.swing.JPanel mainPanel3;
     private javax.swing.JTextField txtHarga;

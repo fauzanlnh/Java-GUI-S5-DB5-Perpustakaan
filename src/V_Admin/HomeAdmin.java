@@ -51,7 +51,7 @@ public class HomeAdmin extends javax.swing.JFrame {
         pnlAnggota = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
-        pnlLaporan = new javax.swing.JPanel();
+        pnlData = new javax.swing.JPanel();
         jLabel6 = new javax.swing.JLabel();
         jLabel16 = new javax.swing.JLabel();
         pnlMaster = new javax.swing.JPanel();
@@ -310,16 +310,16 @@ public class HomeAdmin extends javax.swing.JFrame {
                 .addGap(15, 15, 15))
         );
 
-        pnlLaporan.setBackground(new java.awt.Color(234, 234, 234));
-        pnlLaporan.addMouseListener(new java.awt.event.MouseAdapter() {
+        pnlData.setBackground(new java.awt.Color(234, 234, 234));
+        pnlData.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                pnlLaporanMouseClicked(evt);
+                pnlDataMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                pnlLaporanMouseEntered(evt);
+                pnlDataMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                pnlLaporanMouseExited(evt);
+                pnlDataMouseExited(evt);
             }
         });
 
@@ -331,20 +331,20 @@ public class HomeAdmin extends javax.swing.JFrame {
         jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel16.setText("Data");
 
-        javax.swing.GroupLayout pnlLaporanLayout = new javax.swing.GroupLayout(pnlLaporan);
-        pnlLaporan.setLayout(pnlLaporanLayout);
-        pnlLaporanLayout.setHorizontalGroup(
-            pnlLaporanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlLaporanLayout.createSequentialGroup()
+        javax.swing.GroupLayout pnlDataLayout = new javax.swing.GroupLayout(pnlData);
+        pnlData.setLayout(pnlDataLayout);
+        pnlDataLayout.setHorizontalGroup(
+            pnlDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDataLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlLaporanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(pnlDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE)
                     .addComponent(jLabel6, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        pnlLaporanLayout.setVerticalGroup(
-            pnlLaporanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlLaporanLayout.createSequentialGroup()
+        pnlDataLayout.setVerticalGroup(
+            pnlDataLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDataLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel6)
                 .addGap(18, 18, 18)
@@ -539,7 +539,7 @@ public class HomeAdmin extends javax.swing.JFrame {
                         .addGap(166, 166, 166)
                         .addComponent(pnlAnggota, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(pnlLaporan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(pnlData, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(pnlHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -579,7 +579,7 @@ public class HomeAdmin extends javax.swing.JFrame {
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnlLogout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlAnggota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlLaporan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlMaster, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(100, 100, 100))
         );
@@ -676,24 +676,24 @@ public class HomeAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlMasterMouseEntered
 
     private void pnlMasterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlMasterMouseClicked
-        V_GantiPassword_Done MM = new V_GantiPassword_Done();
+        HomeMaster MM = new HomeMaster();
         MM.show();
         this.dispose();
     }//GEN-LAST:event_pnlMasterMouseClicked
 
-    private void pnlLaporanMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlLaporanMouseExited
-        pnlLaporan.setBackground(new java.awt.Color(234, 234, 234));
-    }//GEN-LAST:event_pnlLaporanMouseExited
+    private void pnlDataMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlDataMouseExited
+        pnlData.setBackground(new java.awt.Color(234, 234, 234));
+    }//GEN-LAST:event_pnlDataMouseExited
 
-    private void pnlLaporanMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlLaporanMouseEntered
-        pnlLaporan.setBackground(new java.awt.Color(115, 163, 239));
-    }//GEN-LAST:event_pnlLaporanMouseEntered
+    private void pnlDataMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlDataMouseEntered
+        pnlData.setBackground(new java.awt.Color(115, 163, 239));
+    }//GEN-LAST:event_pnlDataMouseEntered
 
-    private void pnlLaporanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlLaporanMouseClicked
+    private void pnlDataMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlDataMouseClicked
         HomeData hd = new HomeData();
         hd.show();
         this.dispose();
-    }//GEN-LAST:event_pnlLaporanMouseClicked
+    }//GEN-LAST:event_pnlDataMouseClicked
 
     private void pnlAnggotaMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlAnggotaMouseExited
         pnlAnggota.setBackground(new java.awt.Color(234, 234, 234));
@@ -801,9 +801,9 @@ public class HomeAdmin extends javax.swing.JFrame {
     private javax.swing.JPanel mainPanel;
     private javax.swing.JPanel minimizePanel;
     private javax.swing.JPanel pnlAnggota;
+    private javax.swing.JPanel pnlData;
     private javax.swing.JPanel pnlHome;
     private javax.swing.JPanel pnlKoleksi;
-    private javax.swing.JPanel pnlLaporan;
     private javax.swing.JPanel pnlLogout;
     private javax.swing.JPanel pnlMaster;
     private javax.swing.JPanel pnlPeminjaman;

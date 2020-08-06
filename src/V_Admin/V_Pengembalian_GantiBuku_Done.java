@@ -6,6 +6,7 @@
 package V_Admin;
 
 import Class.DatabaseConnection;
+import Class.LoginSession;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -33,10 +34,7 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
         CariKode.setSize(575, 475);
         CariKode.setLocationRelativeTo(null);
         setJDate();
-        setCMBJenis();
-        setCMBTipe();
         setCMBKategori();
-        setCMBTerbitan();
         setKdBuku();
     }
 
@@ -61,34 +59,6 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
         }
     }
 
-    public void setCMBJenis() {
-        try {
-            String SelectKD = "SELECT * FROM T_Jenis_Koleksi";
-            Statement st = koneksi.createStatement();
-            ResultSet rs = st.executeQuery(SelectKD);
-            while (rs.next()) {
-                String NamaJenisKoleksi = rs.getString("Nama_Jenis");
-                cmbJenis.addItem(NamaJenisKoleksi);
-            }
-        } catch (SQLException e) {
-
-        }
-    }
-
-    public void setCMBTipe() {
-        try {
-            String SelectKD = "SELECT * FROM T_Tipe_Koleksi";
-            Statement st = koneksi.createStatement();
-            ResultSet rs = st.executeQuery(SelectKD);
-            while (rs.next()) {
-                String NamaTipeKoleksi = rs.getString("Nama_Tipe");
-                cmbTipe.addItem(NamaTipeKoleksi);
-            }
-        } catch (SQLException e) {
-
-        }
-    }
-
     public void setCMBKategori() {
         try {
             String SelectKD = "SELECT * FROM T_Kategori_Koleksi";
@@ -103,20 +73,6 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
         }
     }
 
-    public void setCMBTerbitan() {
-        try {
-            String SelectKD = "SELECT * FROM T_Terbitan_Koleksi";
-            Statement st = koneksi.createStatement();
-            ResultSet rs = st.executeQuery(SelectKD);
-            while (rs.next()) {
-                String NamaTerbitanKoleksi = rs.getString("Nama_Terbitan");
-                cmbTerbitan.addItem(NamaTerbitanKoleksi);
-            }
-        } catch (SQLException e) {
-
-        }
-    }
-
     public void Clear() {
         txtJudul.setText("");
         txtNamaPengarang.setText("");
@@ -124,10 +80,7 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
         txtTahunTerbit.setText("");
         txtNoRak.setText("");
         txtHarga.setText("");
-        cmbJenis.setSelectedIndex(0);
-        cmbTipe.setSelectedIndex(0);
         cmbKategori.setSelectedIndex(0);
-        cmbTerbitan.setSelectedIndex(0);
     }
 
     /*-------------------------------------------------------------------------------JFRAME POP-UP----------------------------------------------------*/
@@ -139,7 +92,7 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
         try {
             Statement stmt = koneksi.createStatement();
             query = "SELECT * FROM T_Koleksi, T_Peminjaman WHERE T_Koleksi.Kd_Koleksi = T_Peminjaman.Kd_Koleksi "
-                    + "AND Kd_Anggota LIKE '%" + txtCari.getText() + "%' OR Judul_Koleksi LIKE '%" + txtCari.getText() + "%' AND T_Peminjaman.Status = 'DIPINJAM'"
+                    + "AND Kd_Anggota LIKE '%" + txtCari.getText() + "%' AND T_Peminjaman.Status = 'DIPINJAM'"
                     + "ORDER BY Judul_Koleksi ASC";
 
             ResultSet rs = stmt.executeQuery(query);
@@ -194,13 +147,13 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
         SimpleDateFormat fm = new SimpleDateFormat(tanggalMySQL);
         String Tanggal = String.valueOf(fm.format(txtTanggal.getDate()));
         int Keterlambatan = 0, Denda = 3000;
-        String Judul = null, NoRak = "";
-        int Jenis = 0, Tipe = 0, Kategori = 0, Terbitan = 0;
+        String Judul = null, NoRak = "", NamaPengarang = null, NamaPenerbit = null;
+        int Kategori = 0;
         /* GET DATA */
         String getKdPeminjaman = tblPinjam.getValueAt(tblPinjam.getSelectedRow(), 1).toString();
         try {
             Statement stmt = koneksi.createStatement();
-            String SelectPeminjaman = "SELECT DATEDIFF('" + Tanggal + "', T_Peminjaman.Estimasi_Pengembalian)  AS 'Keterlambatan' FROM T_Peminjaman";
+            String SelectPeminjaman = "SELECT DATEDIFF('" + Tanggal + "', T_Peminjaman.Estimasi_Pengembalian)  AS 'Keterlambatan' FROM T_Peminjaman WHERE Kd_Peminjaman = '" + getKdPeminjaman + "'";
             ResultSet rs2 = stmt.executeQuery(SelectPeminjaman);
             if (rs2.next()) {
                 Keterlambatan = rs2.getInt("Keterlambatan");
@@ -214,19 +167,18 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
             if (rs.next()) {
                 Judul = rs.getString("Judul_Koleksi");
                 NoRak = rs.getString("No_Rak");
-                Jenis = rs.getInt("Kd_Jenis");
-                Tipe = rs.getInt("Kd_Tipe");
                 Kategori = rs.getInt("Kd_Kategori");
-                Terbitan = rs.getInt("Kd_Terbitan");
+                NamaPengarang = rs.getString("Nama_Pengarang");
+                NamaPenerbit = rs.getString("Nama_Penerbit");
+
             }
             txtDenda.setText("" + Denda);
             txtKodePeminjaman.setText(getKdPeminjaman);
+            txtNamaPengarang.setText(NamaPengarang);
+            txtNamaPenerbit.setText(NamaPenerbit);
             txtJudul.setText(Judul);
             txtNoRak.setText(NoRak);
-            cmbJenis.setSelectedIndex(Jenis);
-            cmbTipe.setSelectedIndex(Tipe);
             cmbKategori.setSelectedIndex(Kategori);
-            cmbTerbitan.setSelectedIndex(Terbitan);
         } catch (SQLException e) {
             System.out.println(e);
         }
@@ -244,14 +196,11 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
         String NoRak = txtNoRak.getText().toUpperCase();
         String Harga = txtHarga.getText().toUpperCase();
         String Denda = txtDenda.getText();
-        int KdJenis = cmbJenis.getSelectedIndex();
-        int KdTipe = cmbTipe.getSelectedIndex();
         int KdKategori = cmbKategori.getSelectedIndex();
-        int KdTerbitan = cmbTerbitan.getSelectedIndex();
         int BUbahPeminjaman, BUbahKoleksi, BInputPengembalianGanti;
         String KdKoleksi = null;
         String KodeBukuPenganti = txtKodeKoleksi.getText();
-        if (Judul.equals("") && Pengarang.equals("") && Penerbit.equals("") && TahunTerbit.equals("") && NoRak.equals("") && Harga.equals("") && KdJenis == 0 && KdTipe == 0 && KdKategori == 0 && KdTerbitan == 0) {
+        if (Judul.equals("") && Pengarang.equals("") && Penerbit.equals("") && TahunTerbit.equals("") && NoRak.equals("") && Harga.equals("") && KdKategori == 0) {
             JOptionPane.showMessageDialog(null, "FORM BELUM DI ISI");
             txtJudul.requestFocus();
         } else if (Judul.equals("")) {
@@ -272,41 +221,36 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
         } else if (Harga.equals("")) {
             JOptionPane.showMessageDialog(null, "HARGA BUKU TIDAK BOLEH KOSONG");
             txtHarga.requestFocus();
-        } else if (KdJenis == 0) {
-            JOptionPane.showMessageDialog(null, "JENIS BUKU TIDAK BOLEH KOSONG");
-            cmbJenis.requestFocus();
-        } else if (KdTipe == 0) {
-            JOptionPane.showMessageDialog(null, "TIPE BUKU TIDAK BOLEH KOSONG");
-            cmbTipe.requestFocus();
         } else if (KdKategori == 0) {
             JOptionPane.showMessageDialog(null, "KATEGORI BUKU TIDAK BOLEH KOSONG");
             cmbKategori.requestFocus();
-        } else if (KdTerbitan == 0) {
-            JOptionPane.showMessageDialog(null, "JENIS TERBITAN BUKU TIDAK BOLEH KOSONG");
-            cmbTerbitan.requestFocus();
         } else {
             try {
                 Statement stmt = koneksi.createStatement();
-                String getKdKoleksi = "SELECT Kd_Koleksi FROM T_Koleksi, T_Peminjaman WHERE T_Peminjaman.Kd_Koleksi = T_Koleksi.Kd_Koleksi AND Kd_Peminjaman = '" + KdPeminjaman + "'";
+                String getKdKoleksi = "SELECT Kd_Koleksi FROM  T_Peminjaman WHERE Kd_Peminjaman = '" + KdPeminjaman + "'";
                 ResultSet rs = stmt.executeQuery(getKdKoleksi);
                 if (rs.next()) {
                     KdKoleksi = rs.getString("Kd_Koleksi");
                 }
                 //UBAH STATUS TABEL PEMINJAMAN
-                String Ubah_TPeminjaman = "UPDATE T_Peminjaman SET Tgl_Kembali ='" + Tanggal + "', Denda_Keterlambatan ='" + Denda + "', Status = 'HILANG', Estimasi_Pengembalian ='(NULL)' "
+                String Ubah_TPeminjaman = "UPDATE T_Peminjaman SET Tgl_Kembali ='" + Tanggal + "', Denda_Keterlambatan ='" + Denda + "', "
+                        + "Status = 'HILANG', Estimasi_Pengembalian =(NULL), Username ='" + LoginSession.getUsername() + "' "
                         + "WHERE Kd_Peminjaman = '" + KdPeminjaman + "'";
                 BUbahPeminjaman = stmt.executeUpdate(Ubah_TPeminjaman);
+                System.out.println(Ubah_TPeminjaman);
                 //UBAH STATUS TABEL KOLEKSI
                 String Ubah_TKoleksi = "UPDATE T_Koleksi SET Status ='HILANG', Estimasi_Pengembalian = (NULL) WHERE Kd_Koleksi = '" + KdKoleksi + "'";
                 BUbahKoleksi = stmt.executeUpdate(Ubah_TKoleksi);
-                //INPUT TABEL PENGEMBALIAN GANTI BUKU
-                String sqlInput = "INSERT INTO T_Pengembalian_Ganti(Tanggal_Ganti, Kode_Koleksi, Kd_Peminjaman) VALUES('" + Tanggal + "', " + KodeBukuPenganti + ", '" + KdPeminjaman + "')";
-                BInputPengembalianGanti = stmt.executeUpdate(sqlInput);
+                System.out.println(Ubah_TKoleksi);
                 //INPUT TABEL KOLEKSI
-                String TambahKoleksi = "INSERT INTO T_Koleksi (Judul_Koleksi, Nama_Pengarang, Nama_Penerbit, Tahun_Terbit, No_Rak, Kd_Jenis, Kd_Tipe, Kd_Kategori, Kd_Terbitan, Status, Harga) VALUES "
-                        + "('" + Judul + "','" + Pengarang + "','" + Penerbit + "','" + TahunTerbit + "','" + NoRak + "','" + KdJenis + "','" + KdTipe + "','" + KdKategori + "','" + KdTerbitan + "','TERSEDIA','" + Harga + "')";
+                String TambahKoleksi = "INSERT INTO T_Koleksi (Judul_Koleksi, Nama_Pengarang, Nama_Penerbit, Tahun_Terbit, No_Rak, Kd_Kategori, Status, Harga) VALUES "
+                        + "('" + Judul + "','" + Pengarang + "','" + Penerbit + "','" + TahunTerbit + "','" + NoRak + "','" + KdKategori + "','TERSEDIA','" + Harga + "')";
                 int BerhasilTambah = stmt.executeUpdate(TambahKoleksi);
-
+                System.out.println(TambahKoleksi);
+                //INPUT TABEL PENGEMBALIAN GANTI BUKU
+                String sqlInput = "INSERT INTO T_Pengembalian_Ganti(Tanggal_Ganti, Kode_Koleksi_Ganti, Kd_Peminjaman) VALUES('" + Tanggal + "', " + KodeBukuPenganti + ", '" + KdPeminjaman + "')";
+                BInputPengembalianGanti = stmt.executeUpdate(sqlInput);
+                System.out.println(sqlInput);
                 if (BerhasilTambah > 0 && BInputPengembalianGanti > 0 && BUbahKoleksi > 0 && BUbahPeminjaman > 0) {
                     JOptionPane.showMessageDialog(null, "DATA BERHASIL DIMASUKKAN");
                     Clear();
@@ -358,21 +302,15 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
         lblNoPol2 = new javax.swing.JLabel();
         lblService5 = new javax.swing.JLabel();
         lblNoPol10 = new javax.swing.JLabel();
-        cmbJenis = new javax.swing.JComboBox<>();
         txtNamaPengarang = new javax.swing.JTextField();
         lblService2 = new javax.swing.JLabel();
         lblNoPol11 = new javax.swing.JLabel();
         lblNoPol8 = new javax.swing.JLabel();
         txtJudul = new javax.swing.JTextField();
         txtHarga = new javax.swing.JTextField();
-        cmbTerbitan = new javax.swing.JComboBox<>();
-        lblService4 = new javax.swing.JLabel();
         cmbKategori = new javax.swing.JComboBox<>();
-        lblService1 = new javax.swing.JLabel();
         txtNoRak = new javax.swing.JTextField();
-        cmbTipe = new javax.swing.JComboBox<>();
         txtTahunTerbit = new javax.swing.JTextField();
-        lblService6 = new javax.swing.JLabel();
         lblService3 = new javax.swing.JLabel();
         lblService7 = new javax.swing.JLabel();
         txtNamaPenerbit = new javax.swing.JTextField();
@@ -409,7 +347,7 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
 
         lblNoPol3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblNoPol3.setForeground(new java.awt.Color(51, 51, 51));
-        lblNoPol3.setText("Cari berdasarkan Kode Anggota / Nama Koleksi");
+        lblNoPol3.setText("Cari berdasarkan Kode Anggota");
 
         btnPilihKode.setBackground(new java.awt.Color(240, 240, 240));
         btnPilihKode.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
@@ -514,7 +452,7 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
             .addComponent(mainPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         mainPanel3.setBackground(new java.awt.Color(255, 255, 255));
         mainPanel3.setPreferredSize(new java.awt.Dimension(710, 673));
@@ -524,7 +462,7 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel9.setText("Admin/Pengembalian Buku/Ganti Buku");
+        jLabel9.setText("Admin/Pengembalian Koleksi/Ganti Koleksi");
 
         javax.swing.GroupLayout PanelDirectory3Layout = new javax.swing.GroupLayout(PanelDirectory3);
         PanelDirectory3.setLayout(PanelDirectory3Layout);
@@ -533,7 +471,7 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
             .addGroup(PanelDirectory3Layout.createSequentialGroup()
                 .addGap(17, 17, 17)
                 .addComponent(jLabel9)
-                .addContainerGap(88, Short.MAX_VALUE))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
         PanelDirectory3Layout.setVerticalGroup(
             PanelDirectory3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -626,6 +564,7 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
             }
         });
 
+        txtKodePeminjaman.setEditable(false);
         txtKodePeminjaman.setBackground(new java.awt.Color(255, 255, 255));
         txtKodePeminjaman.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         txtKodePeminjaman.setForeground(new java.awt.Color(51, 51, 51));
@@ -660,11 +599,6 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
         lblNoPol10.setForeground(new java.awt.Color(51, 51, 51));
         lblNoPol10.setText("Judul");
 
-        cmbJenis.setBackground(new java.awt.Color(255, 255, 255));
-        cmbJenis.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        cmbJenis.setForeground(new java.awt.Color(51, 51, 51));
-        cmbJenis.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-" }));
-
         txtNamaPengarang.setBackground(new java.awt.Color(255, 255, 255));
         txtNamaPengarang.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         txtNamaPengarang.setForeground(new java.awt.Color(51, 51, 51));
@@ -692,42 +626,20 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
         txtHarga.setForeground(new java.awt.Color(51, 51, 51));
         txtHarga.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
 
-        cmbTerbitan.setBackground(new java.awt.Color(255, 255, 255));
-        cmbTerbitan.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        cmbTerbitan.setForeground(new java.awt.Color(51, 51, 51));
-        cmbTerbitan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-" }));
-
-        lblService4.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblService4.setForeground(new java.awt.Color(51, 51, 51));
-        lblService4.setText("Tipe");
-
         cmbKategori.setBackground(new java.awt.Color(255, 255, 255));
         cmbKategori.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         cmbKategori.setForeground(new java.awt.Color(51, 51, 51));
         cmbKategori.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-" }));
-
-        lblService1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblService1.setForeground(new java.awt.Color(51, 51, 51));
-        lblService1.setText("Jenis");
 
         txtNoRak.setBackground(new java.awt.Color(255, 255, 255));
         txtNoRak.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         txtNoRak.setForeground(new java.awt.Color(51, 51, 51));
         txtNoRak.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
 
-        cmbTipe.setBackground(new java.awt.Color(255, 255, 255));
-        cmbTipe.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        cmbTipe.setForeground(new java.awt.Color(51, 51, 51));
-        cmbTipe.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "-" }));
-
         txtTahunTerbit.setBackground(new java.awt.Color(255, 255, 255));
         txtTahunTerbit.setFont(new java.awt.Font("Calibri", 0, 18)); // NOI18N
         txtTahunTerbit.setForeground(new java.awt.Color(51, 51, 51));
         txtTahunTerbit.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(51, 51, 51)));
-
-        lblService6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        lblService6.setForeground(new java.awt.Color(51, 51, 51));
-        lblService6.setText("Terbitan");
 
         lblService3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblService3.setForeground(new java.awt.Color(51, 51, 51));
@@ -767,46 +679,19 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
             .addGroup(mainPanel3Layout.createSequentialGroup()
                 .addGap(14, 14, 14)
                 .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(mainPanel3Layout.createSequentialGroup()
-                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblNoPol8)
-                            .addComponent(lblNoPol10)
-                            .addComponent(lblNoPol11)
+                    .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(mainPanel3Layout.createSequentialGroup()
+                            .addComponent(lblService7)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanel3Layout.createSequentialGroup()
+                            .addComponent(lblService3)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(txtNoRak, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, mainPanel3Layout.createSequentialGroup()
                             .addComponent(lblService2)
-                            .addComponent(lblService3))
-                        .addGap(18, 18, 18)
-                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtNamaPenerbit, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtNamaPengarang, javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtJudul, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 231, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(mainPanel3Layout.createSequentialGroup()
-                                    .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(mainPanel3Layout.createSequentialGroup()
-                                    .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(mainPanel3Layout.createSequentialGroup()
-                                            .addComponent(txtTahunTerbit, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(lblService4))
-                                        .addGroup(mainPanel3Layout.createSequentialGroup()
-                                            .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                                .addComponent(txtNoRak, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(cmbJenis, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGap(18, 18, 18)
-                                            .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(lblService6)
-                                                .addComponent(lblService5))))
-                                    .addGap(68, 68, 68)
-                                    .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(cmbTerbitan, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(cmbKategori, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(cmbTipe, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))))))
-                    .addComponent(lblService1)
-                    .addComponent(lblService7)
+                            .addGap(41, 41, 41)
+                            .addComponent(txtTahunTerbit, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(mainPanel3Layout.createSequentialGroup()
                         .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblNoPol9)
@@ -822,7 +707,23 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
                             .addComponent(txtDenda, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblNoPol4)
                             .addComponent(txtKodeKoleksi, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblNoPol5))))
+                            .addComponent(lblNoPol5)))
+                    .addGroup(mainPanel3Layout.createSequentialGroup()
+                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblNoPol8)
+                            .addComponent(lblNoPol10)
+                            .addComponent(lblNoPol11)
+                            .addComponent(lblService5))
+                        .addGap(18, 18, 18)
+                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtNamaPenerbit)
+                            .addComponent(txtNamaPengarang)
+                            .addComponent(txtJudul, javax.swing.GroupLayout.DEFAULT_SIZE, 231, Short.MAX_VALUE)
+                            .addComponent(cmbKategori, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanel3Layout.createSequentialGroup()
+                                .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(txtKasir, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE))
             .addGroup(mainPanel3Layout.createSequentialGroup()
@@ -866,53 +767,40 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
                         .addComponent(txtKasir, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(mainPanel3Layout.createSequentialGroup()
                         .addGap(20, 20, 20)
-                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(mainPanel3Layout.createSequentialGroup()
-                                .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblNoPol10)
-                                    .addComponent(txtJudul, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblNoPol5))
-                                .addGap(20, 20, 20)
-                                .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblNoPol8)
-                                    .addComponent(txtNamaPengarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(txtKodeKoleksi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblNoPol11)
-                                    .addComponent(txtNamaPenerbit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(mainPanel3Layout.createSequentialGroup()
-                                        .addComponent(lblService2)
-                                        .addGap(28, 28, 28)
-                                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                            .addComponent(lblService3)
-                                            .addComponent(lblService5)
-                                            .addComponent(txtNoRak, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                    .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(txtTahunTerbit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(lblService4)))
-                                .addGap(19, 19, 19)
-                                .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lblService1)
-                                    .addComponent(cmbJenis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblService6)))
-                            .addGroup(mainPanel3Layout.createSequentialGroup()
-                                .addComponent(cmbTipe, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(cmbKategori, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(cmbTerbitan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblNoPol10)
+                            .addComponent(txtJudul, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNoPol5))
+                        .addGap(20, 20, 20)
+                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblNoPol8)
+                            .addComponent(txtNamaPengarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtKodeKoleksi, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblNoPol11)
+                            .addComponent(txtNamaPenerbit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblService7)
-                            .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(cmbKategori, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblService5))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtTahunTerbit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblService2))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblService3)
+                            .addComponent(txtNoRak, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtHarga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblService7))))
+                .addGap(29, 29, 29)
                 .addGroup(mainPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSubmit, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnClear, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(117, 117, 117))
+                .addContainerGap(40, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -935,7 +823,7 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPengembalianMouseClicked
-        V_Pengembalian_GantiBuku_Done VP = new V_Pengembalian_GantiBuku_Done();
+        V_Pengembalian_Done VP = new V_Pengembalian_Done();
         VP.show();
         this.dispose();
     }//GEN-LAST:event_btnPengembalianMouseClicked
@@ -949,7 +837,7 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
     private void btnSubmitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubmitActionPerformed
         int ok = JOptionPane.showConfirmDialog(null, "Data Yang Dimasukkan Benar?", "Konfirmasi", JOptionPane.YES_NO_OPTION);
         if (ok == 0) {
-
+            SimpanData();
         }
     }//GEN-LAST:event_btnSubmitActionPerformed
 
@@ -1037,10 +925,7 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
     private javax.swing.JPanel btnPengembalian;
     private javax.swing.JButton btnPilihKode;
     private javax.swing.JButton btnSubmit;
-    private javax.swing.JComboBox<String> cmbJenis;
     private javax.swing.JComboBox<String> cmbKategori;
-    private javax.swing.JComboBox<String> cmbTerbitan;
-    private javax.swing.JComboBox<String> cmbTipe;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JLabel lblNoPol10;
@@ -1053,12 +938,9 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
     private javax.swing.JLabel lblNoPol7;
     private javax.swing.JLabel lblNoPol8;
     private javax.swing.JLabel lblNoPol9;
-    private javax.swing.JLabel lblService1;
     private javax.swing.JLabel lblService2;
     private javax.swing.JLabel lblService3;
-    private javax.swing.JLabel lblService4;
     private javax.swing.JLabel lblService5;
-    private javax.swing.JLabel lblService6;
     private javax.swing.JLabel lblService7;
     private javax.swing.JPanel mainPanel1;
     private javax.swing.JPanel mainPanel3;

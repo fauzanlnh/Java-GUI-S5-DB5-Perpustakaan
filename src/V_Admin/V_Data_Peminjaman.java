@@ -6,12 +6,19 @@
 package V_Admin;
 
 import Class.DatabaseConnection;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -23,7 +30,7 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
      * Creates new form V_Data_Peminjaman
      */
     Connection koneksi;
-    String TanggalAwal, TanggalAkhir, Tahun;
+    String Tanggal, Berdasarkan, Tahun;
 
     public V_Data_Peminjaman() {
         initComponents();
@@ -33,10 +40,6 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
         SetCMBBBds();
     }
     //FORM
-
-    public void Clear() {
-        txtMasihDipinjam.setText("0");
-    }
 
     public void SetCMBBBds() {
         if (cmbCari.getSelectedIndex() == 0) {
@@ -99,7 +102,7 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
     public void TampilPerBulan() {
         DefaultTableModel tableModel = (DefaultTableModel) tblPengembalian.getModel();
         tableModel.setRowCount(0);
-        String kolom[] = {"No", "Kode Peminjaman", "Nama Peminjam", "Nama Koleksi", "Estimasi Pengembalian"};
+        String kolom[] = {"No", "Kode Peminjaman", "Nama Peminjam", "Kode Koleksi", "Estimasi Pengembalian", "Status"};
         int Bulan = cmbBerdasarkan.getSelectedIndex() + 1;
         String BulanToString = String.valueOf(Bulan);
         String Tahun = cmbTahun.getSelectedItem().toString();
@@ -107,29 +110,20 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
         String query = null, query2;
         int No = 1;
         try {
-            String Tanggal = Tahun + "-" + BulanToString + "-1";
+            Tanggal = Tahun + "-" + BulanToString + "-1";
             Statement stmt = koneksi.createStatement();
-            query = "SELECT T_Peminjaman.Kd_Peminjaman, T_Anggota.Nama_Anggota, T_Koleksi.Judul_Koleksi, T_Peminjaman.Estimasi_Pengembalian "
+            query = "SELECT T_Peminjaman.Kd_Peminjaman, T_Anggota.Nama_Anggota, T_Koleksi.Kd_Koleksi, T_Peminjaman.Estimasi_Pengembalian, T_Peminjaman.Status "
                     + "FROM T_Peminjaman JOIN T_Anggota USING(Kd_Anggota) JOIN T_Koleksi USING(Kd_Koleksi) "
-                    + "WHERE T_Peminjaman.Status = 'DIPINJAM' AND "
-                    + "T_Peminjaman.Tgl_Kembali BETWEEN '" + Tanggal + "' AND LAST_DAY('" + Tanggal + "')";
+                    + "WHERE T_Peminjaman.Tgl_Pinjam BETWEEN '" + Tanggal + "' AND LAST_DAY('" + Tanggal + "')";
             ResultSet rs = stmt.executeQuery(query);
             while (rs.next()) {
                 String Kd_Peminjaman = rs.getString("Kd_Peminjaman");
                 String Nama_Anggota = rs.getString("Nama_Anggota");
-                String Judul_Koleksi = rs.getString("Judul_Koleksi");
+                String Kd_Koleksi = rs.getString("Kd_Koleksi");
                 String Estimasi_Pengembalian = rs.getString("Estimasi_Pengembalian");
-                dtm.addRow(new String[]{"" + No, Kd_Peminjaman, Nama_Anggota, Judul_Koleksi, Estimasi_Pengembalian});
+                String Status = rs.getString("Status");
+                dtm.addRow(new String[]{"" + No, Kd_Peminjaman, Nama_Anggota, Kd_Koleksi, Estimasi_Pengembalian, Status});
                 No = No + 1;
-            }
-            query2 = "SELECT DISTINCT(SELECT COUNT(Kd_Peminjaman) FROM T_Peminjaman WHERE STATUS='DIPINJAM') AS 'BelumDikembalikan' "
-                    + "FROM t_peminjaman "
-                    + "WHERE T_Peminjaman.Status = 'DIPINJAM' AND "
-                    + "T_Peminjaman.Tgl_Kembali BETWEEN '" + Tanggal + "' AND LAST_DAY('" + Tanggal + "')";
-            ResultSet rs2 = stmt.executeQuery(query2);
-            if (rs2.next()) {
-                String BelumDikembalikan = rs2.getString("BelumDikembalikan");
-                txtMasihDipinjam.setText(BelumDikembalikan);
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Kesalahan Pada Database" + ex);
@@ -140,7 +134,7 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
     public void TampilPerTriWulan() {
         DefaultTableModel tableModel = (DefaultTableModel) tblPengembalian.getModel();
         tableModel.setRowCount(0);
-        String kolom[] = {"No", "Kode Peminjaman", "Nama Peminjam", "Nama Koleksi", "Estimasi Pengembalian"};
+        String kolom[] = {"No", "Kode Peminjaman", "Nama Peminjam", "Kode Koleksi", "Estimasi Pengembalian", "Status"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
 
         int TriWulan = cmbBerdasarkan.getSelectedIndex();
@@ -158,30 +152,22 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
         String query = null, query2;
         int No = 1;
         try {
-            String Tanggal = Tahun + "-" + Bulan + "-1";
+            Tanggal = Tahun + "-" + Bulan + "-1";
             Statement stmt = koneksi.createStatement();
-            query = "SELECT T_Peminjaman.Kd_Peminjaman, T_Anggota.Nama_Anggota, T_Koleksi.Judul_Koleksi "
+            query = "SELECT T_Peminjaman.Kd_Peminjaman, T_Anggota.Nama_Anggota, T_Koleksi.Kd_Koleksi, T_Peminjaman.Estimasi_Pengembalian, T_Peminjaman.Status "
                     + "FROM T_Peminjaman JOIN T_Anggota USING(Kd_Anggota) JOIN T_Koleksi USING(Kd_Koleksi) "
-                    + "WHERE T_Peminjaman.Status != 'DIPINJAM' AND "
-                    + "T_Peminjaman.Tgl_Kembali BETWEEN '" + Tanggal + "' AND LAST_DAY('" + Tanggal + "'+ INTERVAL 2 MONTH)";
+                    + "WHERE T_Peminjaman.Tgl_Pinjam BETWEEN '" + Tanggal + "' AND LAST_DAY('" + Tanggal + "'+ INTERVAL 2 MONTH)";
 
             ResultSet rs = stmt.executeQuery(query);
             System.out.println(query);
             while (rs.next()) {
                 String Kd_Peminjaman = rs.getString("Kd_Peminjaman");
                 String Nama_Anggota = rs.getString("Nama_Anggota");
-                String Judul_Koleksi = rs.getString("Judul_Koleksi");
-                dtm.addRow(new String[]{"" + No, Kd_Peminjaman, Nama_Anggota, Judul_Koleksi});
+                String Kd_Koleksi = rs.getString("Kd_Koleksi");
+                String Estimasi_Pengembalian = rs.getString("Estimasi_Pengembalian");
+                String Status = rs.getString("Status");
+                dtm.addRow(new String[]{"" + No, Kd_Peminjaman, Nama_Anggota, Kd_Koleksi, Estimasi_Pengembalian, Status});
                 No = No + 1;
-            }
-            query2 = "SELECT DISTINCT(SELECT COUNT(Kd_Peminjaman) FROM T_Peminjaman WHERE STATUS='DIPINJAM') AS 'BelumDikembalikan' "
-                    + "FROM t_peminjaman "
-                    + "WHERE T_Peminjaman.Status = 'DIPINJAM' AND "
-                    + "T_Peminjaman.Tgl_Kembali BETWEEN '" + Tanggal + "' AND LAST_DAY('" + Tanggal + "'+ INTERVAL 2 MONTH)";
-            ResultSet rs2 = stmt.executeQuery(query2);
-            if (rs2.next()) {
-                String BelumDikembalikan = rs2.getString("BelumDikembalikan");
-                txtMasihDipinjam.setText(BelumDikembalikan);
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Kesalahan Pada Database" + ex);
@@ -192,7 +178,7 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
     public void TampilPerSemester() {
         DefaultTableModel tableModel = (DefaultTableModel) tblPengembalian.getModel();
         tableModel.setRowCount(0);
-        String kolom[] = {"No", "Kode Peminjaman", "Nama Peminjam", "Nama Koleksi", "Estimasi Pengembalian"};
+        String kolom[] = {"No", "Kode Peminjaman", "Nama Peminjam", "Kode Koleksi", "Estimasi Pengembalian", "Status"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
 
         int Semester = cmbBerdasarkan.getSelectedIndex();
@@ -206,30 +192,22 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
         String query = null, query2;
         int No = 1;
         try {
-            String Tanggal = Tahun + "-" + Bulan + "-1";
+            Tanggal = Tahun + "-" + Bulan + "-1";
             Statement stmt = koneksi.createStatement();
-            query = "SELECT T_Peminjaman.Kd_Peminjaman, T_Anggota.Nama_Anggota, T_Koleksi.Judul_Koleksi "
+            query = "SELECT T_Peminjaman.Kd_Peminjaman, T_Anggota.Nama_Anggota, T_Koleksi.Kd_Koleksi, T_Peminjaman.Estimasi_Pengembalian, T_Peminjaman.Status "
                     + "FROM T_Peminjaman JOIN T_Anggota USING(Kd_Anggota) JOIN T_Koleksi USING(Kd_Koleksi) "
-                    + "WHERE T_Peminjaman.Status != 'DIPINJAM' AND "
-                    + "T_Peminjaman.Tgl_Kembali BETWEEN '" + Tanggal + "' AND LAST_DAY('" + Tanggal + "'+ INTERVAL 5 MONTH)";
+                    + "WHERE T_Peminjaman.Tgl_Pinjam BETWEEN '" + Tanggal + "' AND LAST_DAY('" + Tanggal + "'+ INTERVAL 5 MONTH)";
 
             ResultSet rs = stmt.executeQuery(query);
             System.out.println(query);
             while (rs.next()) {
                 String Kd_Peminjaman = rs.getString("Kd_Peminjaman");
                 String Nama_Anggota = rs.getString("Nama_Anggota");
-                String Judul_Koleksi = rs.getString("Judul_Koleksi");
-                dtm.addRow(new String[]{"" + No, Kd_Peminjaman, Nama_Anggota, Judul_Koleksi});
+                String Kd_Koleksi = rs.getString("Kd_Koleksi");
+                String Estimasi_Pengembalian = rs.getString("Estimasi_Pengembalian");
+                String Status = rs.getString("Status");
+                dtm.addRow(new String[]{"" + No, Kd_Peminjaman, Nama_Anggota, Kd_Koleksi, Estimasi_Pengembalian, Status});
                 No = No + 1;
-            }
-            query2 = "SELECT DISTINCT(SELECT COUNT(Kd_Peminjaman) FROM T_Peminjaman WHERE STATUS='DIPINJAM') AS 'BelumDikembalikan' "
-                    + "FROM t_peminjaman "
-                    + "WHERE T_Peminjaman.Status = 'DIPINJAM' AND "
-                    + "T_Peminjaman.Tgl_Kembali BETWEEN '" + Tanggal + "' AND LAST_DAY('" + Tanggal + "'+ INTERVAL 5 MONTH)";
-            ResultSet rs2 = stmt.executeQuery(query2);
-            if (rs2.next()) {
-                String BelumDikembalikan = rs2.getString("BelumDikembalikan");
-                txtMasihDipinjam.setText(BelumDikembalikan);
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Kesalahan Pada Database" + ex);
@@ -240,7 +218,7 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
     public void TampilPerTahun() {
         DefaultTableModel tableModel = (DefaultTableModel) tblPengembalian.getModel();
         tableModel.setRowCount(0);
-        String kolom[] = {"No", "Kode Peminjaman", "Nama Peminjam", "Nama Koleksi", "Estimasi Pengembalian"};
+        String kolom[] = {"No", "Kode Peminjaman", "Nama Peminjam", "Kode Koleksi", "Estimasi Pengembalian", "Status"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
 
         String Bulan = "1";
@@ -248,30 +226,22 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
         String query = null, query2;
         int No = 1;
         try {
-            String Tanggal = Tahun + "-" + Bulan + "-1";
+            Tanggal = Tahun + "-" + Bulan + "-1";
             Statement stmt = koneksi.createStatement();
-            query = "SELECT T_Peminjaman.Kd_Peminjaman, T_Anggota.Nama_Anggota, T_Koleksi.Judul_Koleksi "
+            query = "SELECT T_Peminjaman.Kd_Peminjaman, T_Anggota.Nama_Anggota, T_Koleksi.Kd_Koleksi, T_Peminjaman.Estimasi_Pengembalian, T_Peminjaman.Status "
                     + "FROM T_Peminjaman JOIN T_Anggota USING(Kd_Anggota) JOIN T_Koleksi USING(Kd_Koleksi) "
-                    + "WHERE T_Peminjaman.Status != 'DIPINJAM' AND "
-                    + "T_Peminjaman.Tgl_Kembali BETWEEN '" + Tanggal + "' AND LAST_DAY('" + Tanggal + "'+ INTERVAL 11 MONTH)";
+                    + "WHERE T_Peminjaman.Tgl_Pinjam BETWEEN '" + Tanggal + "' AND LAST_DAY('" + Tanggal + "'+ INTERVAL 11 MONTH)";
 
             ResultSet rs = stmt.executeQuery(query);
             System.out.println(query);
             while (rs.next()) {
                 String Kd_Peminjaman = rs.getString("Kd_Peminjaman");
                 String Nama_Anggota = rs.getString("Nama_Anggota");
-                String Judul_Koleksi = rs.getString("Judul_Koleksi");
-                dtm.addRow(new String[]{"" + No, Kd_Peminjaman, Nama_Anggota, Judul_Koleksi});
+                String Kd_Koleksi = rs.getString("Kd_Koleksi");
+                String Estimasi_Pengembalian = rs.getString("Estimasi_Pengembalian");
+                String Status = rs.getString("Status");
+                dtm.addRow(new String[]{"" + No, Kd_Peminjaman, Nama_Anggota, Kd_Koleksi, Estimasi_Pengembalian, Status});
                 No = No + 1;
-            }
-            query2 = "SELECT DISTINCT(SELECT COUNT(Kd_Peminjaman) FROM T_Peminjaman WHERE STATUS='DIPINJAM') AS 'BelumDikembalikan' "
-                    + "FROM t_peminjaman "
-                    + "WHERE T_Peminjaman.Status = 'DIPINJAM' AND "
-                    + "T_Peminjaman.Tgl_Kembali BETWEEN '" + Tanggal + "' AND LAST_DAY('" + Tanggal + "'+ INTERVAL 11 MONTH)";
-            ResultSet rs2 = stmt.executeQuery(query2);
-            if (rs2.next()) {
-                String BelumDikembalikan = rs2.getString("BelumDikembalikan");
-                txtMasihDipinjam.setText(BelumDikembalikan);
             }
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "Kesalahan Pada Database" + ex);
@@ -294,15 +264,12 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         tblPengembalian = new javax.swing.JTable();
         btnPrint1 = new javax.swing.JButton();
-        btnCari = new javax.swing.JButton();
         jLabel21 = new javax.swing.JLabel();
         cmbCari = new javax.swing.JComboBox<>();
         cmbBerdasarkan = new javax.swing.JComboBox<>();
         lblBulan = new javax.swing.JLabel();
         jLabel22 = new javax.swing.JLabel();
         cmbTahun = new javax.swing.JComboBox<>();
-        jLabel20 = new javax.swing.JLabel();
-        txtMasihDipinjam = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -314,7 +281,7 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("Data/Date Peminjaman Koleksi");
+        jLabel8.setText("Data/Data Peminjaman Koleksi");
 
         javax.swing.GroupLayout PanelDirectoryLayout = new javax.swing.GroupLayout(PanelDirectory);
         PanelDirectory.setLayout(PanelDirectoryLayout);
@@ -340,7 +307,7 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
 
             },
             new String [] {
-                "No", "Kode Peminjaman", "Nama Peminjam", "Nama Koleksi", "Estimasi Pengembalian"
+                "No", "Kode Peminjaman", "Nama Peminjam", "Kode  Koleksi", "Estimasi Pengembalian", "Status"
             }
         ));
         jScrollPane2.setViewportView(tblPengembalian);
@@ -355,15 +322,9 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
                 btnPrint1MouseClicked(evt);
             }
         });
-
-        btnCari.setBackground(new java.awt.Color(240, 240, 240));
-        btnCari.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        btnCari.setForeground(new java.awt.Color(51, 51, 51));
-        btnCari.setText("Cari");
-        btnCari.setBorder(null);
-        btnCari.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnCariMouseClicked(evt);
+        btnPrint1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrint1ActionPerformed(evt);
             }
         });
 
@@ -408,53 +369,36 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
             }
         });
 
-        jLabel20.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        jLabel20.setForeground(new java.awt.Color(51, 51, 51));
-        jLabel20.setText("Belum Dikembalikan");
-
-        txtMasihDipinjam.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
-        txtMasihDipinjam.setForeground(new java.awt.Color(51, 51, 51));
-        txtMasihDipinjam.setText("0");
-
         javax.swing.GroupLayout mainPanel1Layout = new javax.swing.GroupLayout(mainPanel1);
         mainPanel1.setLayout(mainPanel1Layout);
         mainPanel1Layout.setHorizontalGroup(
             mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(mainPanel1Layout.createSequentialGroup()
-                .addComponent(PanelDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 744, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(mainPanel1Layout.createSequentialGroup()
+                .addGap(23, 23, 23)
                 .addGroup(mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(mainPanel1Layout.createSequentialGroup()
-                        .addGap(23, 23, 23)
+                        .addGroup(mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cmbCari, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel21))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(mainPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(txtMasihDipinjam, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addGroup(mainPanel1Layout.createSequentialGroup()
-                                    .addGroup(mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(cmbCari, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(jLabel21))
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                    .addGroup(mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(mainPanel1Layout.createSequentialGroup()
-                                            .addComponent(lblBulan)
-                                            .addGap(113, 113, 113)
-                                            .addComponent(jLabel22))
-                                        .addGroup(mainPanel1Layout.createSequentialGroup()
-                                            .addComponent(cmbBerdasarkan, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                            .addComponent(cmbTahun, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(18, 18, 18)
-                                            .addComponent(btnCari, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(65, 65, 65))))
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 566, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(lblBulan)
+                                .addGap(113, 113, 113)
+                                .addComponent(jLabel22))
+                            .addGroup(mainPanel1Layout.createSequentialGroup()
+                                .addComponent(cmbBerdasarkan, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(11, 11, 11)
+                                .addComponent(cmbTahun, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(mainPanel1Layout.createSequentialGroup()
-                        .addGap(301, 301, 301)
-                        .addComponent(btnPrint1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnPrint1, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 665, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(mainPanel1Layout.createSequentialGroup()
+                .addComponent(PanelDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 744, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         mainPanel1Layout.setVerticalGroup(
             mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -473,19 +417,14 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
                         .addComponent(jLabel22)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
                 .addGroup(mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCari, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbCari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbBerdasarkan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cmbTahun, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(30, 30, 30)
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(20, 20, 20)
-                .addGroup(mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel20)
-                    .addComponent(txtMasihDipinjam))
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 339, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
                 .addComponent(btnPrint1, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(45, Short.MAX_VALUE))
+                .addGap(44, 44, 44))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -509,33 +448,59 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_btnPrint1MouseClicked
 
-    private void btnCariMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnCariMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnCariMouseClicked
-
     private void cmbCariItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbCariItemStateChanged
         SetCMBBBds();
     }//GEN-LAST:event_cmbCariItemStateChanged
 
     private void cmbBerdasarkanItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbBerdasarkanItemStateChanged
         if (cmbCari.getSelectedIndex() == 0) {
-            Clear();
             TampilPerBulan();
+            Berdasarkan = "Bulan";
         } else if (cmbCari.getSelectedIndex() == 1) {
-            Clear();
             TampilPerTriWulan();
+            Berdasarkan = "Triwulan";
         } else if (cmbCari.getSelectedIndex() == 2) {
-            Clear();
             TampilPerSemester();
+            Berdasarkan = "Semester";
         } else if (cmbCari.getSelectedIndex() == 3) {
-            Clear();
             TampilPerTahun();
+            Berdasarkan = "Tahun";
         }
     }//GEN-LAST:event_cmbBerdasarkanItemStateChanged
 
     private void cmbTahunItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbTahunItemStateChanged
 
     }//GEN-LAST:event_cmbTahunItemStateChanged
+
+    private void btnPrint1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrint1ActionPerformed
+        // TODO add your handling code here:
+        String Bulan;
+        try {
+            //Koneksi Database
+            com.mysql.jdbc.Connection c = (com.mysql.jdbc.Connection) DatabaseConnection.getKoneksi("localhost", "3306", "root", "", "db_kuliah_provis_perpustakaan");
+            //CETAK DATA
+            if (cmbBerdasarkan.getSelectedItem() == null) {
+                Bulan = "Tahun";
+            } else {
+                Bulan = cmbBerdasarkan.getSelectedItem().toString();
+            }
+            HashMap parameter = new HashMap();
+            parameter.put("tgl", Tanggal);
+            parameter.put("bds", Berdasarkan);
+            parameter.put("bln", Bulan);
+            parameter.put("thn", cmbTahun.getSelectedItem().toString());
+            //AMBIL FILE
+            File file = new File("src/Report/Laporan_Data_Peminjaman2.jasper");
+            JasperReport jr = (JasperReport) JRLoader.loadObject(file);
+            JasperPrint jp = JasperFillManager.fillReport(jr, parameter, c);
+            //AGAR TIDAK MENGCLOSE APLIKASi
+            JasperViewer.viewReport(jp, false);
+            JasperViewer.setDefaultLookAndFeelDecorated(true);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "" + e);
+        }
+    }//GEN-LAST:event_btnPrint1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -574,12 +539,10 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PanelDirectory;
-    private javax.swing.JButton btnCari;
     private javax.swing.JButton btnPrint1;
     private javax.swing.JComboBox<String> cmbBerdasarkan;
     private javax.swing.JComboBox<String> cmbCari;
     private javax.swing.JComboBox<String> cmbTahun;
-    private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
     private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel8;
@@ -587,6 +550,5 @@ public class V_Data_Peminjaman extends javax.swing.JFrame {
     private javax.swing.JLabel lblBulan;
     private javax.swing.JPanel mainPanel1;
     private javax.swing.JTable tblPengembalian;
-    private javax.swing.JLabel txtMasihDipinjam;
     // End of variables declaration//GEN-END:variables
 }

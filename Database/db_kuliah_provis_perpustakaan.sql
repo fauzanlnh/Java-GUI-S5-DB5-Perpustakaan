@@ -31,26 +31,31 @@ CREATE TABLE `t_anggota` (
 /*Data for the table `t_anggota` */
 
 insert  into `t_anggota`(`Kd_Anggota`,`Nama_Anggota`,`Status_Anggota`,`Email`) values 
+('10118225','YANA JULIANA','BIASA','YANAJULIANA.10118225@MAHASISWA.UNIKOM.AC.ID'),
+('10118226','ARVELINO HERZANTIO','BIASA','ARVELINOHERZANTIO.10118226@MAHASISWA.UNIKOM.AC.ID'),
 ('10118227','FAUZAN LUKMANUL HAKIM','BIASA','FAUZAN.10118227@MAHASISWA.UNIKOM.AC.ID'),
+('10118228','YANUAR WANDA PUTRA','KHUSUS','YANUAR.10118228@MAHASISWA.UNIKOM.AC.ID'),
+('10118234','MUHAMMAD FAISHAL AZIZI','KHUSUS','MUHAMMADFAISHAL.10118234@MAHASISWA.UNIKOM.AC.ID'),
+('10118240','AKBAR SALEH ALFIAN','BIASA','AKBARSALAEHALFIAN.10118240@MAHASISWA.UNIKOM.AC.ID'),
+('10118241','DIKRI SALIK AMARULLAH','KHUSUS','DIKRISALIK.10118241@MAHASISWA.UNIKOM.AC.ID'),
+('10118243','ABDUL HANIF','BIASA','ABDULHANIF.10118243@MAHASISWA.UNIKOM.AC.ID'),
+('10118244','AUDRIANA PUTRI','BIASA','AUDRIANAPUTRI.10118244@MAHASISWA.UNIKOM.AC.ID'),
+('10118245','ALAMSYAH JIWANEGARA','KHUSUS','ALAMSYAH.10118245@MAHASISWA.UNIKOM.AC.ID'),
+('10118248','REZA LUTFI NURDIANSYAH','BIASA','REZALUTFI.10118248@MAHASISWA.UNIKOM.AC.ID'),
+('10118249','BAGUS PERDANA YUSUF','KHUSUS','BAGUSPERDANA.10118249@MAHASISWA.UNIKOM.AC.ID'),
+('10118252','ROBI NURHIDAYAT','BIASA','ROBINURHIDAYAT.10118252@MAHASISWA.UNIKOM.AC.ID'),
+('10118253','RAMADHANI','KHUSUS','RAMADAHNI.10118253@MAHASISWA.UNIKOM.AC.ID'),
+('10118254','FAKHRI YUSRIZAL HIDAYAT','KHUSUS','FAKHRIYUSRIZAL.10118254@MAHASISWA.UNIKOM.AC.ID'),
+('10118255','RADEN FACHRUL RAMZI','KHUSUS','RADENFACHRUL.10118255@MAHASISWA.UNIKOM.AC.ID'),
 ('10118256','GENTRA ARIA WIBAWA','KHUSUS','GENTRA@10118256@MAHASISWA.UNIKOM.AC.ID'),
-('10118265','MOCHAMAD ALVY NUR RAMADHAN','BIASA','ALVY@10118265@MAHASISWA.UNIKOM.AC.ID');
-
-/*Table structure for table `t_jenis_koleksi` */
-
-DROP TABLE IF EXISTS `t_jenis_koleksi`;
-
-CREATE TABLE `t_jenis_koleksi` (
-  `Kd_Jenis` int(11) NOT NULL AUTO_INCREMENT,
-  `Nama_Jenis` char(30) DEFAULT NULL,
-  PRIMARY KEY (`Kd_Jenis`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
-
-/*Data for the table `t_jenis_koleksi` */
-
-insert  into `t_jenis_koleksi`(`Kd_Jenis`,`Nama_Jenis`) values 
-(1,'SIRKULASI'),
-(2,'REFERENSI'),
-(3,'AUDIO VISUAL');
+('10118257','MAULANA FAJAR SHIDIQ','BIASA','MAULANAFAJAR.10118257@MAHASISWA.UNIKOM.AC.ID'),
+('10118258','SYIFA NABILA KADI','BIASA','SYIFANABILA.10118258@MAHASISWA.UNIKOM.AC.ID'),
+('10118259','ANDRE RIANA MULYA','KHUSUS','ANDRERIANA.10118259@MAHASISWA.UNIKOM.AC.ID'),
+('10118261','MUHAMMAD FIQRI','BIASA','MUHAMMADFIQRI.10118261@MAHASISWA.UNIKOM.AC.ID'),
+('10118262','RIZALDI NAUFAL GHIFFARI','KHUSUS','RIZALDI.10118262@MAHASISWA.UNIKOM.AC.ID'),
+('10118263','SANDI MAULANA','BIASA','SANDIMAULANA.10118263@MAHASISWA.UNIKOM.AC.ID'),
+('10118265','MOCHAMAD ALVY NUR RAMADHAN','BIASA','ALVY@10118265@MAHASISWA.UNIKOM.AC.ID'),
+('10118266','FADLI RINALDI BAHARI','BIASA','FADLIRINALDI.10118266@MAHASISWA.UNIKOM.AC.ID');
 
 /*Table structure for table `t_kategori_koleksi` */
 
@@ -60,7 +65,7 @@ CREATE TABLE `t_kategori_koleksi` (
   `Kd_Kategori` int(11) NOT NULL AUTO_INCREMENT,
   `Nama_Kategori` char(30) DEFAULT NULL,
   PRIMARY KEY (`Kd_Kategori`)
-) ENGINE=InnoDB AUTO_INCREMENT=19 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=latin1;
 
 /*Data for the table `t_kategori_koleksi` */
 
@@ -82,7 +87,8 @@ insert  into `t_kategori_koleksi`(`Kd_Kategori`,`Nama_Kategori`) values
 (15,'ARSITEKTUR'),
 (16,'KESASTRAAN'),
 (17,'GEOGRAFI'),
-(18,'SEJARAH');
+(18,'SEJARAH'),
+(19,'TES');
 
 /*Table structure for table `t_koleksi` */
 
@@ -95,28 +101,46 @@ CREATE TABLE `t_koleksi` (
   `Nama_Penerbit` char(30) DEFAULT NULL,
   `Tahun_Terbit` char(4) DEFAULT NULL,
   `No_Rak` char(10) DEFAULT NULL,
-  `Kd_Jenis` int(11) DEFAULT NULL,
-  `Kd_Tipe` int(11) DEFAULT NULL,
   `Kd_Kategori` int(11) DEFAULT NULL,
-  `Kd_Terbitan` int(11) DEFAULT NULL,
   `Status` char(20) DEFAULT NULL,
   `Estimasi_Pengembalian` date DEFAULT NULL,
   `Harga` int(11) DEFAULT NULL,
   PRIMARY KEY (`Kd_Koleksi`),
-  KEY `Kd_Terbitan` (`Kd_Terbitan`),
   KEY `Kd_Kategori` (`Kd_Kategori`),
-  KEY `Kd_Tipe` (`Kd_Tipe`),
-  KEY `Kd_Jenis` (`Kd_Jenis`),
-  CONSTRAINT `t_koleksi_ibfk_1` FOREIGN KEY (`Kd_Terbitan`) REFERENCES `t_terbitan_koleksi` (`Kd_Terbitan`),
-  CONSTRAINT `t_koleksi_ibfk_2` FOREIGN KEY (`Kd_Kategori`) REFERENCES `t_kategori_koleksi` (`Kd_Kategori`),
-  CONSTRAINT `t_koleksi_ibfk_3` FOREIGN KEY (`Kd_Tipe`) REFERENCES `t_tipe_koleksi` (`Kd_Tipe`),
-  CONSTRAINT `t_koleksi_ibfk_4` FOREIGN KEY (`Kd_Jenis`) REFERENCES `t_jenis_koleksi` (`Kd_Jenis`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
+  CONSTRAINT `t_koleksi_ibfk_2` FOREIGN KEY (`Kd_Kategori`) REFERENCES `t_kategori_koleksi` (`Kd_Kategori`)
+) ENGINE=InnoDB AUTO_INCREMENT=29 DEFAULT CHARSET=latin1;
 
 /*Data for the table `t_koleksi` */
 
-insert  into `t_koleksi`(`Kd_Koleksi`,`Judul_Koleksi`,`Nama_Pengarang`,`Nama_Penerbit`,`Tahun_Terbit`,`No_Rak`,`Kd_Jenis`,`Kd_Tipe`,`Kd_Kategori`,`Kd_Terbitan`,`Status`,`Estimasi_Pengembalian`,`Harga`) values 
-(1,'ACCESS BY DESIGN','GEORGE A. COVINGTON','VAN NOSTRAND REIHOLD','2007','5',1,1,14,3,'DIPINJAM','2020-07-08',250000);
+insert  into `t_koleksi`(`Kd_Koleksi`,`Judul_Koleksi`,`Nama_Pengarang`,`Nama_Penerbit`,`Tahun_Terbit`,`No_Rak`,`Kd_Kategori`,`Status`,`Estimasi_Pengembalian`,`Harga`) values 
+(1,'ACCESS BY DESIGN','GEORGE A. COVINGTON','VAN NOSTRAND REIHOLD','2007','5',14,'HILANG',NULL,250000),
+(2,'PEMROGRAMAN DATABASE DENGAN DELPHI 7','ABDUL KADIR','PENERBIT ANDI','2004','1',2,'TERSEDIA',NULL,200000),
+(3,'ANIMASI MENGGUNAKAN FLASH','PRIYANTO HIDAYATULLAH','INFORMATIKA','2011','1',2,'TERSEDIA','0000-00-00',210000),
+(4,'GRAFIK DAN ANIMASI PROFESIONAL POWER POINT','EDY WINARNO DAN ALI ZAKI','ELEX MEDIA KOMPUTINDO','2015','1',2,'DIPINJAM','2020-08-13',225000),
+(5,'GOD, DO YOU SPEAK ENGLISH?','JEFF KRISTIANTO','RENE BOOKS','2019','1',1,'DIPINJAM','2020-08-13',265000),
+(6,'ONTOLOGI METAFISIKA UMUM FILSAFAT','ACHMAD CHARIS ZUBAIR','KANISIUS YOGYAKARTA','1992','1',3,'TERSEDIA',NULL,190000),
+(7,'AKUNTANSI PENGANTAR-1','SUPARDI','GAVA MEDIA','2009','2',12,'TERSEDIA',NULL,150000),
+(8,'THE AUTHORIZED BIOGRAPHY OF KH.ABDURRAHMAN WAHID','GREG BARTON','LKiS','2011','2',18,'TERSEDIA',NULL,285000),
+(9,'KESADARAN NASIONAL','SLAMET MULJANA','LKiS','2008','2',18,'DIPINJAM','2020-08-13',170000),
+(10,'MANAJEMEN PENERBIT JURNAL ILMIAH','LUKMAN S','SUGANG SETO','2012','2',13,'TERSEDIA',NULL,240000),
+(11,'FIQH EKONOMI SYARIAH','DR. MARDANI','KENCANA','2013','2',4,'TERSEDIA','0000-00-00',125000),
+(12,'TETAP SEHAT SETELAH USIA 40 TAHUN','DR. SALMA','GEMA INSANI','2014','3',5,'HILANG',NULL,270000),
+(13,'JEJAK-JEJAK CINTA','TONI RAHARJO','GEMA INSANI','2015','3',5,'TERSEDIA','0000-00-00',185000),
+(14,'AN INQUIRY INTO THE NATURE AND CAUSES OF THE WEALT','ADAM SMITH','ADAM SMITH','1776','3',6,'TERSEDIA','0000-00-00',350000),
+(15,'HUKUM BISNIS PROPERTI DI INDONESIA','ANDIKA WIJAYA','GRASINDO','2017','3',7,'TERSEDIA','0000-00-00',105000),
+(16,'MATEMATIKA DASAR TEORI','JHON BIRD','ERLANGGA','2004','3',8,'TERSEDIA','0000-00-00',135000),
+(17,'BAHASA DAN SASTRA','KIFTIAWATI DAN ENDRY SULISTYO','PUSPA SWARA','2007','4',9,'TERSEDIA','0000-00-00',75000),
+(18,'A BRIEF HISTORY OF TIME','STEPHEN HAWKING','BANTAM DELL PUBLISHING GROUP','1988','4',11,'TERSEDIA','0000-00-00',500000),
+(19,'MAKING AND BREAKING THE GRID','TIMOTHY SAMARA','AUTHOR BOOKS','2005','4',14,'TERSEDIA','0000-00-00',450000),
+(20,'SEJARAH DAN PERADABAN ISLAM','BADRI YATIM','PT RAJA GRAFINDO PERSADA','1998','5',18,'TERSEDIA','0000-00-00',120000),
+(21,'DESAIN RUMAH APLIKATIF','ARTATI','DEEP PUBLISH','2018','4',15,'TERSEDIA','0000-00-00',80000),
+(22,'SITI NURBAYA','MARAH RUSLI','BALAI PUSTAKA','1922','4',16,'TERSEDIA','0000-00-00',195000),
+(23,'PENGANTAR TEKNOLOGI INFORMASI','TATA SUTABRI','ANDI OFFSET','2014','5',2,'TERSEDIA','0000-00-00',80000),
+(24,'SISTEM BERKAS 2013','WAHYUNI','ANDI OFFSET','2013','5',2,'TERSEDIA','0000-00-00',95000),
+(25,'TEKNIK SAMPLING','ERIYANTO','LKiS','2007','5',2,'TERSEDIA','0000-00-00',320000),
+(26,NULL,NULL,NULL,NULL,NULL,NULL,'TERSEDIA',NULL,NULL),
+(27,'ACCESS BY DESIGN','GEORGE A. COVINGTON','VAN NOSTRAND REIHOLD','2019','5',14,'TERSEDIA',NULL,250000),
+(28,'ACCESS BY DESIGN','GEORGE A. COVINGTON','VAN NOSTRAND REIHOLD','2019','5',14,'TERSEDIA',NULL,250000);
 
 /*Table structure for table `t_master` */
 
@@ -126,15 +150,15 @@ CREATE TABLE `t_master` (
   `Username` char(20) NOT NULL,
   `Password` char(20) DEFAULT NULL,
   `Hak_Akses` char(20) DEFAULT NULL,
-  `Kd_Pegawai` char(20) DEFAULT NULL,
   PRIMARY KEY (`Username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `t_master` */
 
-insert  into `t_master`(`Username`,`Password`,`Hak_Akses`,`Kd_Pegawai`) values 
-('ADMIN','ADMIN3','ADMIN',NULL),
-('USER','USER','USER',NULL);
+insert  into `t_master`(`Username`,`Password`,`Hak_Akses`) values 
+('ADMIN','ADMIN3','ADMIN'),
+('FAUZAN','FAUZAN','ADMIN'),
+('USER','USER','USER');
 
 /*Table structure for table `t_peminjaman` */
 
@@ -149,35 +173,58 @@ CREATE TABLE `t_peminjaman` (
   `Estimasi_Pengembalian` date DEFAULT NULL,
   `Denda_Keterlambatan` int(11) DEFAULT NULL,
   `Status` char(15) DEFAULT NULL,
+  `Username` char(20) DEFAULT NULL,
   PRIMARY KEY (`Kd_Peminjaman`),
   KEY `Kd_Anggota` (`Kd_Anggota`),
   KEY `Kd_Koleksi` (`Kd_Koleksi`),
+  KEY `Username` (`Username`),
   CONSTRAINT `t_peminjaman_ibfk_2` FOREIGN KEY (`Kd_Anggota`) REFERENCES `t_anggota` (`Kd_Anggota`),
-  CONSTRAINT `t_peminjaman_ibfk_3` FOREIGN KEY (`Kd_Koleksi`) REFERENCES `t_koleksi` (`Kd_Koleksi`)
+  CONSTRAINT `t_peminjaman_ibfk_3` FOREIGN KEY (`Kd_Koleksi`) REFERENCES `t_koleksi` (`Kd_Koleksi`),
+  CONSTRAINT `t_peminjaman_ibfk_4` FOREIGN KEY (`Username`) REFERENCES `t_master` (`Username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 /*Data for the table `t_peminjaman` */
 
-insert  into `t_peminjaman`(`Kd_Peminjaman`,`Kd_Koleksi`,`Kd_Anggota`,`Tgl_Pinjam`,`Tgl_Kembali`,`Estimasi_Pengembalian`,`Denda_Keterlambatan`,`Status`) values 
-('20206.1',1,'10118227','2020-06-30','2020-06-30','2020-07-07',0,'DIKEMBALIKAN'),
-('20206.2',1,'10118227','2020-06-30','2020-07-01','2020-07-07',0,'DIKEMBALIKAN'),
-('20207.1',1,'10118227','2020-07-01',NULL,'2020-07-08',NULL,'DIPINJAM');
+insert  into `t_peminjaman`(`Kd_Peminjaman`,`Kd_Koleksi`,`Kd_Anggota`,`Tgl_Pinjam`,`Tgl_Kembali`,`Estimasi_Pengembalian`,`Denda_Keterlambatan`,`Status`,`Username`) values 
+('',NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL),
+('20206-001',1,'10118227','2020-06-30','2020-06-30',NULL,0,'DIKEMBALIKAN',NULL),
+('20206-002',1,'10118227','2020-06-30','2020-07-01',NULL,0,'DIKEMBALIKAN',NULL),
+('20207-001',1,'10118227','2020-07-01','2020-08-05',NULL,84000,'DIKEMBALIKAN',NULL),
+('20208-001',2,'10118227','2020-08-05','2020-08-05',NULL,0,'DIKEMBALIKAN',NULL),
+('20208-002',12,'10118227','2020-08-05','2020-08-05',NULL,0,'HILANG',NULL),
+('20208-003',1,'10118227','2020-08-05','2020-08-05',NULL,0,'HILANG',NULL),
+('20208-004',2,'10118227','2020-08-05','2020-08-12',NULL,0,'DIKEMBALIKAN',NULL),
+('20208-005',3,'10118265','2020-08-05',NULL,'2020-08-13',NULL,'DIPINJAM',NULL),
+('20208-006',2,'10118227','2020-08-06','2020-08-06',NULL,0,'DIKEMBALIKAN',NULL),
+('20208-007',4,'10118227','2020-08-06',NULL,'2020-08-13',NULL,'DIPINJAM',NULL),
+('20208-008',5,'10118227','2020-08-06',NULL,'2020-08-13',NULL,'DIPINJAM',NULL),
+('20208-009',6,'10118227','2020-08-06','2020-08-06',NULL,0,'DIKEMBALIKAN',NULL),
+('20208-010',7,'10118227','2020-08-06','2020-08-06',NULL,0,'DIKEMBALIKAN',NULL),
+('20208-011',8,'10118227','2020-08-06','2020-08-06',NULL,0,'DIKEMBALIKAN',NULL),
+('20208-012',8,'10118227','2020-08-06','2020-08-06',NULL,0,'DIKEMBALIKAN',NULL),
+('20208-013',9,'10118227','2020-08-06',NULL,'2020-08-13',NULL,'DIPINJAM',NULL),
+('20208-014',10,'10118227','2020-08-06','2020-08-06',NULL,0,'DIKEMBALIKAN',NULL);
 
 /*Table structure for table `t_pengembalian_bayar` */
 
 DROP TABLE IF EXISTS `t_pengembalian_bayar`;
 
 CREATE TABLE `t_pengembalian_bayar` (
-  `Kd_Kehilangan` int(11) NOT NULL,
+  `Kd_Kehilangan` int(11) NOT NULL AUTO_INCREMENT,
   `Tanggal_Ganti` date DEFAULT NULL,
   `Harga_Ganti` int(11) DEFAULT NULL,
   `Kd_Peminjaman` char(10) DEFAULT NULL,
   PRIMARY KEY (`Kd_Kehilangan`),
   KEY `Kd_Peminjaman` (`Kd_Peminjaman`),
   CONSTRAINT `t_pengembalian_bayar_ibfk_1` FOREIGN KEY (`Kd_Peminjaman`) REFERENCES `t_peminjaman` (`Kd_Peminjaman`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
 
 /*Data for the table `t_pengembalian_bayar` */
+
+insert  into `t_pengembalian_bayar`(`Kd_Kehilangan`,`Tanggal_Ganti`,`Harga_Ganti`,`Kd_Peminjaman`) values 
+(1,'2020-08-05',270000,'20208-002'),
+(2,NULL,NULL,NULL),
+(3,NULL,NULL,NULL);
 
 /*Table structure for table `t_pengembalian_ganti` */
 
@@ -188,45 +235,17 @@ CREATE TABLE `t_pengembalian_ganti` (
   `Tanggal_Ganti` date DEFAULT NULL,
   `Kode_Koleksi_Ganti` int(11) DEFAULT NULL,
   `Kd_Peminjaman` char(10) DEFAULT NULL,
-  PRIMARY KEY (`Kd_Kehilangan`)
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  PRIMARY KEY (`Kd_Kehilangan`),
+  KEY `Kd_Peminjaman` (`Kd_Peminjaman`),
+  KEY `Kode_Koleksi_Ganti` (`Kode_Koleksi_Ganti`),
+  CONSTRAINT `t_pengembalian_ganti_ibfk_1` FOREIGN KEY (`Kd_Peminjaman`) REFERENCES `t_peminjaman` (`Kd_Peminjaman`),
+  CONSTRAINT `t_pengembalian_ganti_ibfk_2` FOREIGN KEY (`Kode_Koleksi_Ganti`) REFERENCES `t_koleksi` (`Kd_Koleksi`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 /*Data for the table `t_pengembalian_ganti` */
 
-/*Table structure for table `t_terbitan_koleksi` */
-
-DROP TABLE IF EXISTS `t_terbitan_koleksi`;
-
-CREATE TABLE `t_terbitan_koleksi` (
-  `Kd_Terbitan` int(11) NOT NULL AUTO_INCREMENT,
-  `Nama_Terbitan` char(20) DEFAULT NULL,
-  PRIMARY KEY (`Kd_Terbitan`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=latin1;
-
-/*Data for the table `t_terbitan_koleksi` */
-
-insert  into `t_terbitan_koleksi`(`Kd_Terbitan`,`Nama_Terbitan`) values 
-(1,'DALAM NEGERI'),
-(2,'DALAM NEGERI LANGKA'),
-(3,'LUAR NEGERI');
-
-/*Table structure for table `t_tipe_koleksi` */
-
-DROP TABLE IF EXISTS `t_tipe_koleksi`;
-
-CREATE TABLE `t_tipe_koleksi` (
-  `Kd_Tipe` int(11) NOT NULL AUTO_INCREMENT,
-  `Nama_Tipe` char(20) DEFAULT NULL,
-  PRIMARY KEY (`Kd_Tipe`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
-
-/*Data for the table `t_tipe_koleksi` */
-
-insert  into `t_tipe_koleksi`(`Kd_Tipe`,`Nama_Tipe`) values 
-(1,'BUKU'),
-(2,'CD / AUDIO VISUAL'),
-(3,'BERKALA / SERIAL'),
-(4,'KARTOGRAFIS');
+insert  into `t_pengembalian_ganti`(`Kd_Kehilangan`,`Tanggal_Ganti`,`Kode_Koleksi_Ganti`,`Kd_Peminjaman`) values 
+(1,'2020-08-05',28,'20208-003');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

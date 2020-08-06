@@ -65,7 +65,7 @@
                           <EmptySpace min="-2" pref="166" max="-2" attributes="0"/>
                           <Component id="pnlAnggota" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="pnlLaporan" min="-2" max="-2" attributes="0"/>
+                          <Component id="pnlData" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace max="-2" attributes="0"/>
@@ -118,7 +118,7 @@
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="pnlLogout" max="32767" attributes="0"/>
                       <Component id="pnlAnggota" alignment="0" max="32767" attributes="0"/>
-                      <Component id="pnlLaporan" alignment="0" max="32767" attributes="0"/>
+                      <Component id="pnlData" alignment="0" max="32767" attributes="0"/>
                       <Component id="pnlMaster" alignment="0" max="32767" attributes="0"/>
                   </Group>
                   <EmptySpace min="-2" pref="100" max="-2" attributes="0"/>
@@ -477,16 +477,16 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="pnlLaporan">
+        <Container class="javax.swing.JPanel" name="pnlData">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ea" green="ea" red="ea" type="rgb"/>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pnlLaporanMouseClicked"/>
-            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pnlLaporanMouseEntered"/>
-            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pnlLaporanMouseExited"/>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pnlDataMouseClicked"/>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pnlDataMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pnlDataMouseExited"/>
           </Events>
 
           <Layout>

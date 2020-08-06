@@ -6,7 +6,6 @@
 package Class;
 
 import V_Admin.HomeAdmin;
-import V_User.HomeUser;
 import V_User.V_Data_Koleksi_User;
 import java.awt.Color;
 import java.sql.Connection;
@@ -20,15 +19,15 @@ import javax.swing.JOptionPane;
  * @author Fauzanlh
  */
 public class Login extends javax.swing.JFrame {
-
+    
     Connection koneksi;
-
+    
     public Login() {
         initComponents();
         this.setLocationRelativeTo(null);
         koneksi = DatabaseConnection.getKoneksi("localhost", "3306", "root", "", "DB_Kuliah_Provis_Perpustakaan");
     }
-
+    
     public void cek() {
         String pass = txtPassword.getText().toUpperCase();
         String user = txtUsername.getText().toUpperCase();
@@ -44,6 +43,7 @@ public class Login extends javax.swing.JFrame {
                         HomeAdmin mn = new HomeAdmin();
                         mn.setVisible(true);
                         this.dispose();
+                        LoginSession.setUsername(user);
                     } else if (rs.getString("Hak_Akses").equals("USER")) {
                         JOptionPane.showMessageDialog(null, "LOGIN SUCCES ");
                         this.dispose();
