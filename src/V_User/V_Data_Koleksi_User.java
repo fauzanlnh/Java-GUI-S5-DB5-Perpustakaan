@@ -5,6 +5,7 @@
  */
 package V_User;
 
+import Class.C_Koleksi;
 import V_Admin.*;
 import Class.DatabaseConnection;
 import java.sql.Connection;
@@ -23,30 +24,37 @@ public class V_Data_Koleksi_User extends javax.swing.JFrame {
      * Creates new form V_Data_Koleksi
      */
     Connection koneksi;
-    
+    C_Koleksi Koleksi = new C_Koleksi();
+    String getKdKoleksi, getJudulKoleksi, getPengarang, getNoRak, getStatus;
+
     public V_Data_Koleksi_User() {
         initComponents();
         this.setLocationRelativeTo(null);
-        koneksi = DatabaseConnection.getKoneksi("localhost", "3306", "root", "", "db_kuliah_provis_perpustakaan");
+        koneksi = DatabaseConnection.getKoneksi("localhost", "3306", "root", "", "db10118227perpustakaan");
         showData();
     }
-    
+
     public void showData() {
         String kolom[] = {"No", "Kode Koleksi", "Nama Koleksi", "Nama Pengarang", "No Rak", "Status"};
         DefaultTableModel tableModel = new DefaultTableModel(null, kolom);
         String query = null;
         try {
             Statement stmt = koneksi.createStatement();
-            query = "SELECT * FROM T_Koleksi WHERE STATUS != 'HILANG' ORDER BY Kd_Koleksi ASC";
+            query = "SELECT * FROM T_Koleksi ORDER BY Kd_Koleksi ASC";
             ResultSet rs = stmt.executeQuery(query);
             int no = 1;
             while (rs.next()) {
-                String Kode_Koleksi = rs.getString("Kd_Koleksi");
-                String Judul_Koleksi = rs.getString("Judul_Koleksi");
-                String Nama_Pengarang = rs.getString("Nama_Pengarang");
-                String No_Rak = rs.getString("No_Rak");
-                String Status = rs.getString("Status");
-                tableModel.addRow(new String[]{no + "", Kode_Koleksi, Judul_Koleksi, Nama_Pengarang, No_Rak, Status});
+                Koleksi.setKdKoleksi(rs.getString("Kd_Koleksi"));
+                Koleksi.setJudulKoleksi(rs.getString("Judul_Koleksi"));
+                Koleksi.setPengarang(rs.getString("Nama_Pengarang"));
+                Koleksi.setNoRak(rs.getString("No_Rak"));
+                Koleksi.setStatus(rs.getString("Status"));
+                getKdKoleksi = Koleksi.getKdKoleksi();
+                getJudulKoleksi = Koleksi.getJudulKoleksi();
+                getPengarang = Koleksi.getPengarang();
+                getNoRak = Koleksi.getNoRak();
+                getStatus = Koleksi.getStatus();
+                tableModel.addRow(new String[]{no + "", getKdKoleksi, getJudulKoleksi, getPengarang, getNoRak, getStatus});
                 no++;
             }
         } catch (Exception ex) {
@@ -54,7 +62,7 @@ public class V_Data_Koleksi_User extends javax.swing.JFrame {
         }
         tblKoleksi.setModel(tableModel);
     }
-    
+
     public void CariData() {
         String kolom[] = {"No", "Kode Koleksi", "Nama Koleksi", "Nama Pengarang", "No Rak", "Status"};
         DefaultTableModel tableModel = new DefaultTableModel(null, kolom);
@@ -64,30 +72,39 @@ public class V_Data_Koleksi_User extends javax.swing.JFrame {
             //CARI BEDASARKAN JUDUL
 
             if (cmbCari.getSelectedIndex() == 1) {
-                query = "SELECT * FROM T_Koleksi WHERE STATUS != 'HILANG' AND Judul_Koleksi LIKE '%" + txtCari.getText() + "%' "
+                Koleksi.setJudulKoleksi(txtCari.getText());
+                String Cari = Koleksi.getJudulKoleksi();
+                query = "SELECT * FROM T_Koleksi WHERE Judul_Koleksi LIKE '%" + Cari + "%' "
                         + "ORDER BY Kd_Koleksi ASC";
             } else if (cmbCari.getSelectedIndex() == 2) {
-                query = "SELECT * FROM T_Koleksi WHERE STATUS != 'HILANG' AND Nama_Pengarang LIKE '%" + txtCari.getText() + "%' "
+                Koleksi.setPengarang(txtCari.getText());
+                String Cari = Koleksi.getPengarang();
+                query = "SELECT * FROM T_Koleksi WHERE Nama_Pengarang LIKE '%" + Cari + "%' "
                         + "ORDER BY Kd_Koleksi ASC";
             }
             ResultSet rs = stmt.executeQuery(query);
             int no = 1;
             while (rs.next()) {
-                String Kode_Koleksi = rs.getString("Kd_Koleksi");
-                String Judul_Koleksi = rs.getString("Judul_Koleksi");
-                String Nama_Pengarang = rs.getString("Nama_Pengarang");
-                String No_Rak = rs.getString("No_Rak");
-                String Status = rs.getString("Status");
-                tableModel.addRow(new String[]{no + "", Kode_Koleksi, Judul_Koleksi, Nama_Pengarang, No_Rak, Status});
+                Koleksi.setKdKoleksi(rs.getString("Kd_Koleksi"));
+                Koleksi.setJudulKoleksi(rs.getString("Judul_Koleksi"));
+                Koleksi.setPengarang(rs.getString("Nama_Pengarang"));
+                Koleksi.setNoRak(rs.getString("No_Rak"));
+                Koleksi.setStatus(rs.getString("Status"));
+                getKdKoleksi = Koleksi.getKdKoleksi();
+                getJudulKoleksi = Koleksi.getJudulKoleksi();
+                getPengarang = Koleksi.getPengarang();
+                getNoRak = Koleksi.getNoRak();
+                getStatus = Koleksi.getStatus();
+                tableModel.addRow(new String[]{no + "", getKdKoleksi, getJudulKoleksi, getPengarang, getNoRak, getStatus});
                 no++;
             }
-            
+
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, "KESALAHAN PADA DATABASE" + ex);
         }
-        
+
         tblKoleksi.setModel(tableModel);
-        
+
     }
 
     /**
@@ -119,23 +136,24 @@ public class V_Data_Koleksi_User extends javax.swing.JFrame {
 
         jLabel8.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel8.setText("Data/Koleksi");
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/output-onlinepngtools.png"))); // NOI18N
+        jLabel8.setText("Perpustakaan");
 
         javax.swing.GroupLayout PanelDirectoryLayout = new javax.swing.GroupLayout(PanelDirectory);
         PanelDirectory.setLayout(PanelDirectoryLayout);
         PanelDirectoryLayout.setHorizontalGroup(
             PanelDirectoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PanelDirectoryLayout.createSequentialGroup()
-                .addGap(17, 17, 17)
+                .addGap(29, 29, 29)
                 .addComponent(jLabel8)
-                .addContainerGap(581, Short.MAX_VALUE))
+                .addContainerGap(491, Short.MAX_VALUE))
         );
         PanelDirectoryLayout.setVerticalGroup(
             PanelDirectoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PanelDirectoryLayout.createSequentialGroup()
-                .addContainerGap(29, Short.MAX_VALUE)
+            .addGroup(PanelDirectoryLayout.createSequentialGroup()
+                .addGap(16, 16, 16)
                 .addComponent(jLabel8)
-                .addGap(39, 39, 39))
+                .addContainerGap(19, Short.MAX_VALUE))
         );
 
         tblKoleksi.setFont(new java.awt.Font("Calibri", 0, 14)); // NOI18N
@@ -257,21 +275,21 @@ public class V_Data_Koleksi_User extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-                    
+
                 }
             }
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(V_Data_Koleksi_User.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            
+
         } catch (InstantiationException ex) {
             java.util.logging.Logger.getLogger(V_Data_Koleksi_User.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            
+
         } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(V_Data_Koleksi_User.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-            
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(V_Data_Koleksi_User.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);

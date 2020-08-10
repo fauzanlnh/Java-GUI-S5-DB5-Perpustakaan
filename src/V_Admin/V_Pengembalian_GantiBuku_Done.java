@@ -5,6 +5,11 @@
  */
 package V_Admin;
 
+import Class.C_Anggota;
+import Class.C_KategoriKoleksi;
+import Class.C_Koleksi;
+import Class.C_Peminjaman;
+import Class.C_Pengembalian_Ganti;
 import Class.DatabaseConnection;
 import Class.LoginSession;
 import java.sql.Connection;
@@ -16,20 +21,24 @@ import java.util.Calendar;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author Fauzanlh
- */
+
 public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
 
     /**
      * Creates new form V_Pengembalian_GantiBuku_Done
      */
     Connection koneksi;
-
+    C_Koleksi Koleksi = new C_Koleksi();
+    C_Anggota Anggota = new C_Anggota();
+    C_Peminjaman Pinjam = new C_Peminjaman();
+    C_Pengembalian_Ganti Ganti = new C_Pengembalian_Ganti();
+    C_KategoriKoleksi Kategori = new C_KategoriKoleksi();
+    String getKdPeminjaman, getKdAnggota, getKdKoleksi, getJudulKoleksi, getKdKategori, getNoRak, getPengarang, getPenerbit, getNamaKategori, getTahunTerbit, getKoleksiGanti;
+    int getDenda, getHarga;
+    
     public V_Pengembalian_GantiBuku_Done() {
         initComponents();
-        koneksi = DatabaseConnection.getKoneksi("localhost", "3306", "root", "", "db_kuliah_provis_perpustakaan");
+        koneksi = DatabaseConnection.getKoneksi("localhost", "3306", "root", "", "db10118227perpustakaan");
         this.setLocationRelativeTo(null);
         CariKode.setSize(575, 475);
         CariKode.setLocationRelativeTo(null);
@@ -37,7 +46,7 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
         setCMBKategori();
         setKdBuku();
     }
-
+    
     public void setJDate() {
         Calendar today = Calendar.getInstance();
         txtTanggal.setDate(today.getTime());
@@ -58,21 +67,21 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
             System.out.println(e);
         }
     }
-
+    
     public void setCMBKategori() {
         try {
             String SelectKD = "SELECT * FROM T_Kategori_Koleksi";
             Statement st = koneksi.createStatement();
             ResultSet rs = st.executeQuery(SelectKD);
             while (rs.next()) {
-                String NamaKategoriKoleksi = rs.getString("Nama_Kategori");
-                cmbKategori.addItem(NamaKategoriKoleksi);
+                Kategori.setNmKategori(rs.getString("Nama_Kategori"));
+                cmbKategori.addItem(Kategori.getNmKategori());
             }
         } catch (SQLException e) {
-
+            
         }
     }
-
+    
     public void Clear() {
         txtJudul.setText("");
         txtNamaPengarang.setText("");
@@ -91,18 +100,24 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
         int n = 0;
         try {
             Statement stmt = koneksi.createStatement();
+            Anggota.setKdAnggota(txtCari.getText());
+            String Cari = Anggota.getKdAnggota();
             query = "SELECT * FROM T_Koleksi, T_Peminjaman WHERE T_Koleksi.Kd_Koleksi = T_Peminjaman.Kd_Koleksi "
-                    + "AND Kd_Anggota LIKE '%" + txtCari.getText() + "%' AND T_Peminjaman.Status = 'DIPINJAM'"
+                    + "AND Kd_Anggota LIKE '%" + Cari + "%' AND T_Peminjaman.Status = 'DIPINJAM'"
                     + "ORDER BY Judul_Koleksi ASC";
-
+            
             ResultSet rs = stmt.executeQuery(query);
             int no = 1;
             while (rs.next()) {
-                String Kd_Peminjaman = rs.getString("Kd_Peminjaman");
-                String Kd_Anggota = rs.getString("Kd_Anggota");
-                String Kd_Koleksi = rs.getString("Kd_Koleksi");
-                String Judul_Koleksi = rs.getString("Judul_Koleksi");
-                dtm.addRow(new String[]{no + "", Kd_Peminjaman, Kd_Anggota, Kd_Koleksi, Judul_Koleksi});
+                Pinjam.setKdPeminjaman(rs.getString("Kd_Peminjaman"));
+                Anggota.setKdAnggota(rs.getString("Kd_Anggota"));
+                Koleksi.setKdKoleksi(rs.getString("Kd_Koleksi"));
+                Koleksi.setJudulKoleksi(rs.getString("Judul_Koleksi"));
+                getKdPeminjaman = Pinjam.getKdPeminjaman();
+                getKdAnggota = Anggota.getKdAnggota();
+                getKdKoleksi = Koleksi.getKdKoleksi();
+                getJudulKoleksi = Koleksi.getJudulKoleksi();
+                dtm.addRow(new String[]{no + "", getKdPeminjaman, getKdAnggota, getKdKoleksi, getJudulKoleksi});
                 no++;
                 n = n + 1;
             }
@@ -116,7 +131,7 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
         }
         tblPinjam.setModel(dtm);
     }
-
+    
     public void TampiDataPinjaman() {
         String kolom[] = {"NO", "Kode Peminjaman", "Kode Anggota", "Kode Koleksi", "Judul Koleksi"};
         DefaultTableModel dtm = new DefaultTableModel(null, kolom);
@@ -128,11 +143,15 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
             ResultSet rs = stmt.executeQuery(query);
             int no = 1;
             while (rs.next()) {
-                String Kd_Peminjaman = rs.getString("Kd_Peminjaman");
-                String Kd_Anggota = rs.getString("Kd_Anggota");
-                String Kd_Koleksi = rs.getString("Kd_Koleksi");
-                String Judul_Koleksi = rs.getString("Judul_Koleksi");
-                dtm.addRow(new String[]{no + "", Kd_Peminjaman, Kd_Anggota, Kd_Koleksi, Judul_Koleksi});
+                Pinjam.setKdPeminjaman(rs.getString("Kd_Peminjaman"));
+                Anggota.setKdAnggota(rs.getString("Kd_Anggota"));
+                Koleksi.setKdKoleksi(rs.getString("Kd_Koleksi"));
+                Koleksi.setJudulKoleksi(rs.getString("Judul_Koleksi"));
+                getKdPeminjaman = Pinjam.getKdPeminjaman();
+                getKdAnggota = Anggota.getKdAnggota();
+                getKdKoleksi = Koleksi.getKdKoleksi();
+                getJudulKoleksi = Koleksi.getJudulKoleksi();
+                dtm.addRow(new String[]{no + "", getKdPeminjaman, getKdAnggota, getKdKoleksi, getJudulKoleksi});
                 no++;
             }
         } catch (Exception ex) {
@@ -141,16 +160,16 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
         tblPinjam.setModel(dtm);
     }
     String JudulKoleksi;
-
+    
     public void KlikTabelFaktur() {
+        //TANGGAL UNTUK PERBANDINGAN
         String tanggalMySQL = "yyyy-MM-dd";
         SimpleDateFormat fm = new SimpleDateFormat(tanggalMySQL);
         String Tanggal = String.valueOf(fm.format(txtTanggal.getDate()));
         int Keterlambatan = 0, Denda = 3000;
-        String Judul = null, NoRak = "", NamaPengarang = null, NamaPenerbit = null;
-        int Kategori = 0;
         /* GET DATA */
-        String getKdPeminjaman = tblPinjam.getValueAt(tblPinjam.getSelectedRow(), 1).toString();
+        Pinjam.setKdPeminjaman(tblPinjam.getValueAt(tblPinjam.getSelectedRow(), 1).toString());
+        getKdPeminjaman = Pinjam.getKdPeminjaman();
         try {
             Statement stmt = koneksi.createStatement();
             String SelectPeminjaman = "SELECT DATEDIFF('" + Tanggal + "', T_Peminjaman.Estimasi_Pengembalian)  AS 'Keterlambatan' FROM T_Peminjaman WHERE Kd_Peminjaman = '" + getKdPeminjaman + "'";
@@ -161,94 +180,123 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
                     Keterlambatan = 0;
                 }
                 Denda = Denda * Keterlambatan;
+                Pinjam.setDenda(Denda);
+                getDenda = Pinjam.getDenda();
             }
             String SelectJudul = "SELECT * FROM T_Koleksi JOIN T_Peminjaman USING(Kd_Koleksi) WHERE Kd_Peminjaman='" + getKdPeminjaman + "'";
             ResultSet rs = stmt.executeQuery(SelectJudul);
             if (rs.next()) {
-                Judul = rs.getString("Judul_Koleksi");
-                NoRak = rs.getString("No_Rak");
-                Kategori = rs.getInt("Kd_Kategori");
-                NamaPengarang = rs.getString("Nama_Pengarang");
-                NamaPenerbit = rs.getString("Nama_Penerbit");
-
+                Koleksi.setJudulKoleksi(rs.getString("Judul_Koleksi"));
+                Koleksi.setNoRak(rs.getString("No_Rak"));
+                Kategori.setKdKategori(rs.getString("Kd_Kategori"));
+                Koleksi.setPengarang(rs.getString("Nama_Pengarang"));
+                Koleksi.setPenerbit(rs.getString("Nama_Penerbit"));
+                getJudulKoleksi = Koleksi.getJudulKoleksi();
+                getNoRak = Koleksi.getNoRak();
+                getKdKategori = Kategori.getKdKategori();
+                getPengarang = Koleksi.getPengarang();
+                getPenerbit = Koleksi.getPenerbit();
+                
             }
-            txtDenda.setText("" + Denda);
+            String SelectKategori = "SELECT * FROM Kategori_Koleksi WHERE Kd_Kategori ='" + getKdKategori + "'";
+            ResultSet rs3 = stmt.executeQuery(SelectKategori);
+            if (rs2.next()) {
+                Kategori.setNmKategori(rs3.getString("Nama_Kategori"));
+                getNamaKategori = Kategori.getNmKategori();
+            }
+            txtDenda.setText("" + getDenda);
             txtKodePeminjaman.setText(getKdPeminjaman);
-            txtNamaPengarang.setText(NamaPengarang);
-            txtNamaPenerbit.setText(NamaPenerbit);
-            txtJudul.setText(Judul);
-            txtNoRak.setText(NoRak);
-            cmbKategori.setSelectedIndex(Kategori);
+            txtNamaPengarang.setText(getPengarang);
+            txtNamaPenerbit.setText(getPenerbit);
+            txtJudul.setText(getJudulKoleksi);
+            txtNoRak.setText(getNoRak);
+            cmbKategori.setSelectedItem(getNamaKategori);
         } catch (SQLException e) {
             System.out.println(e);
         }
     }
-
+    
     public void SimpanData() {
         String tanggalMySQL = "yyyy-MM-dd";
         SimpleDateFormat fm = new SimpleDateFormat(tanggalMySQL);
         String Tanggal = String.valueOf(fm.format(txtTanggal.getDate()));
-        String KdPeminjaman = txtKodePeminjaman.getText().toUpperCase();
-        String Judul = txtJudul.getText().toUpperCase();
-        String Pengarang = txtNamaPengarang.getText().toUpperCase();
-        String Penerbit = txtNamaPenerbit.getText().toUpperCase();
-        String TahunTerbit = txtTahunTerbit.getText().toUpperCase();
-        String NoRak = txtNoRak.getText().toUpperCase();
-        String Harga = txtHarga.getText().toUpperCase();
-        String Denda = txtDenda.getText();
-        int KdKategori = cmbKategori.getSelectedIndex();
         int BUbahPeminjaman, BUbahKoleksi, BInputPengembalianGanti;
-        String KdKoleksi = null;
-        String KodeBukuPenganti = txtKodeKoleksi.getText();
-        if (Judul.equals("") && Pengarang.equals("") && Penerbit.equals("") && TahunTerbit.equals("") && NoRak.equals("") && Harga.equals("") && KdKategori == 0) {
+        if (txtJudul.getText().equals("") && txtNamaPengarang.getText().equals("") && txtNamaPenerbit.getText().equals("") && txtTahunTerbit.getText().equals("") && txtNoRak.getText().equals("") && txtHarga.getText().equals("") && cmbKategori.getSelectedIndex() == 0) {
             JOptionPane.showMessageDialog(null, "FORM BELUM DI ISI");
             txtJudul.requestFocus();
-        } else if (Judul.equals("")) {
+        } else if (txtJudul.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "JUDUL TIDAK BOLEH KOSONG");
             txtJudul.requestFocus();
-        } else if (Pengarang.equals("")) {
+        } else if (txtNamaPengarang.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "NAMA PENGARANG TIDAK BOLEH KOSONG");
             txtNamaPengarang.requestFocus();
-        } else if (Penerbit.equals("")) {
+        } else if (txtNamaPenerbit.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "NAMA PENERBIT TIDAK BOLEH KOSONG");
             txtNamaPenerbit.requestFocus();
-        } else if (TahunTerbit.equals("")) {
+        } else if (txtTahunTerbit.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "TAHUN TERBIT TIDAK BOLEH KOSONG");
             txtTahunTerbit.requestFocus();
-        } else if (NoRak.equals("")) {
+        } else if (txtNoRak.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "NO RAK TIDAK BOLEH KOSONG");
             txtNoRak.requestFocus();
-        } else if (Harga.equals("")) {
+        } else if (txtHarga.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "HARGA BUKU TIDAK BOLEH KOSONG");
             txtHarga.requestFocus();
-        } else if (KdKategori == 0) {
+        } else if (cmbKategori.getSelectedIndex() == 0) {
             JOptionPane.showMessageDialog(null, "KATEGORI BUKU TIDAK BOLEH KOSONG");
             cmbKategori.requestFocus();
         } else {
             try {
+                Pinjam.setKdPeminjaman(txtKodePeminjaman.getText().toUpperCase());
+                Koleksi.setJudulKoleksi(txtJudul.getText().toUpperCase());
+                Koleksi.setPengarang(txtNamaPengarang.getText().toUpperCase());
+                Koleksi.setPenerbit(txtNamaPenerbit.getText().toUpperCase());
+                Koleksi.setTahunTerbit(txtTahunTerbit.getText().toUpperCase());
+                Koleksi.setNoRak(txtNoRak.getText().toUpperCase());
+                Koleksi.setHarga(Integer.valueOf(txtHarga.getText().toUpperCase()));
+                Pinjam.setDenda(Integer.valueOf(txtDenda.getText()));
+                Kategori.setNmKategori(cmbKategori.getSelectedItem().toString());
+                Ganti.setKdKoleksi(txtKodeKoleksi.getText());
+                getKdPeminjaman = Pinjam.getKdPeminjaman();
+                getJudulKoleksi = Koleksi.getJudulKoleksi();
+                getPengarang = Koleksi.getPengarang();
+                getPenerbit = Koleksi.getPenerbit();
+                getTahunTerbit = Koleksi.getTahunTerbit();
+                getNoRak = Koleksi.getNoRak();
+                getHarga = Koleksi.getHarga();
+                getDenda = Pinjam.getDenda();
+                getNamaKategori = Kategori.getNmKategori();
+                getKoleksiGanti = Ganti.getKodeKoleksi();
                 Statement stmt = koneksi.createStatement();
-                String getKdKoleksi = "SELECT Kd_Koleksi FROM  T_Peminjaman WHERE Kd_Peminjaman = '" + KdPeminjaman + "'";
+                String getKdKoleksi = "SELECT Kd_Koleksi FROM  T_Peminjaman WHERE Kd_Peminjaman = '" + getKdPeminjaman + "'";
                 ResultSet rs = stmt.executeQuery(getKdKoleksi);
                 if (rs.next()) {
-                    KdKoleksi = rs.getString("Kd_Koleksi");
+                    Koleksi.setKdKoleksi(rs.getString("Kd_Koleksi"));
+                    getKdKoleksi = Koleksi.getKdKoleksi();
+                }
+                String getKdKategori = "SELECT Kd_Kategori FROM T_Kategori WHERE Nama_Kategori = '" + getNamaKategori + "'";
+                ResultSet rs2 = stmt.executeQuery(getKdKategori);
+                if (rs2.next()) {
+                    Kategori.setKdKategori(rs.getString("Kd_Kategori"));
+                    getKdKategori = Kategori.getKdKategori();
                 }
                 //UBAH STATUS TABEL PEMINJAMAN
-                String Ubah_TPeminjaman = "UPDATE T_Peminjaman SET Tgl_Kembali ='" + Tanggal + "', Denda_Keterlambatan ='" + Denda + "', "
+                String Ubah_TPeminjaman = "UPDATE T_Peminjaman SET Tgl_Kembali ='" + Tanggal + "', Denda_Keterlambatan ='" + getDenda + "', "
                         + "Status = 'HILANG', Estimasi_Pengembalian =(NULL), Username ='" + LoginSession.getUsername() + "' "
-                        + "WHERE Kd_Peminjaman = '" + KdPeminjaman + "'";
+                        + "WHERE Kd_Peminjaman = '" + getKdPeminjaman + "'";
                 BUbahPeminjaman = stmt.executeUpdate(Ubah_TPeminjaman);
                 System.out.println(Ubah_TPeminjaman);
                 //UBAH STATUS TABEL KOLEKSI
-                String Ubah_TKoleksi = "UPDATE T_Koleksi SET Status ='HILANG', Estimasi_Pengembalian = (NULL) WHERE Kd_Koleksi = '" + KdKoleksi + "'";
+                String Ubah_TKoleksi = "UPDATE T_Koleksi SET Status ='HILANG', Estimasi_Pengembalian = (NULL) WHERE Kd_Koleksi = '" + getKdKoleksi + "'";
                 BUbahKoleksi = stmt.executeUpdate(Ubah_TKoleksi);
                 System.out.println(Ubah_TKoleksi);
                 //INPUT TABEL KOLEKSI
                 String TambahKoleksi = "INSERT INTO T_Koleksi (Judul_Koleksi, Nama_Pengarang, Nama_Penerbit, Tahun_Terbit, No_Rak, Kd_Kategori, Status, Harga) VALUES "
-                        + "('" + Judul + "','" + Pengarang + "','" + Penerbit + "','" + TahunTerbit + "','" + NoRak + "','" + KdKategori + "','TERSEDIA','" + Harga + "')";
+                        + "('" + getJudulKoleksi + "','" + getPengarang + "','" + getPenerbit + "','" + getTahunTerbit + "','" + getNoRak + "','" + getKdKategori + "','TERSEDIA','" + getHarga + "')";
                 int BerhasilTambah = stmt.executeUpdate(TambahKoleksi);
                 System.out.println(TambahKoleksi);
                 //INPUT TABEL PENGEMBALIAN GANTI BUKU
-                String sqlInput = "INSERT INTO T_Pengembalian_Ganti(Tanggal_Ganti, Kode_Koleksi_Ganti, Kd_Peminjaman) VALUES('" + Tanggal + "', " + KodeBukuPenganti + ", '" + KdPeminjaman + "')";
+                String sqlInput = "INSERT INTO T_Pengembalian_Ganti(Tanggal_Ganti, Kode_Koleksi_Ganti, Kd_Peminjaman) VALUES('" + Tanggal + "', " + getKoleksiGanti + ", '" + getKdPeminjaman + "')";
                 BInputPengembalianGanti = stmt.executeUpdate(sqlInput);
                 System.out.println(sqlInput);
                 if (BerhasilTambah > 0 && BInputPengembalianGanti > 0 && BUbahKoleksi > 0 && BUbahPeminjaman > 0) {
@@ -823,13 +871,13 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnPengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnPengembalianMouseClicked
-        V_Pengembalian_Done VP = new V_Pengembalian_Done();
+        V_Beres_Pengembalian VP = new V_Beres_Pengembalian();
         VP.show();
         this.dispose();
     }//GEN-LAST:event_btnPengembalianMouseClicked
 
     private void btnDendaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnDendaMouseClicked
-        V_Pengembalian_Denda_Done VP = new V_Pengembalian_Denda_Done();
+        V_Beres_Pengembalian_Denda VP = new V_Beres_Pengembalian_Denda();
         VP.show();
         this.dispose();
     }//GEN-LAST:event_btnDendaMouseClicked
@@ -884,21 +932,21 @@ public class V_Pengembalian_GantiBuku_Done extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
-
+                    
                 }
             }
         } catch (ClassNotFoundException ex) {
             java.util.logging.Logger.getLogger(V_Pengembalian_GantiBuku_Done.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            
         } catch (InstantiationException ex) {
             java.util.logging.Logger.getLogger(V_Pengembalian_GantiBuku_Done.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            
         } catch (IllegalAccessException ex) {
             java.util.logging.Logger.getLogger(V_Pengembalian_GantiBuku_Done.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);
-
+            
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(V_Pengembalian_GantiBuku_Done.class
                     .getName()).log(java.util.logging.Level.SEVERE, null, ex);

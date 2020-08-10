@@ -33,7 +33,7 @@ public class HomeData extends javax.swing.JFrame {
     private void initComponents() {
 
         mainPanel1 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
+        pnlDirectory = new javax.swing.JPanel();
         jLabel17 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         jLabel20 = new javax.swing.JLabel();
@@ -72,8 +72,8 @@ public class HomeData extends javax.swing.JFrame {
         mainPanel1.setBackground(new java.awt.Color(255, 255, 255));
         mainPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
-        jPanel3.setBackground(new java.awt.Color(30, 130, 234));
-        jPanel3.setPreferredSize(new java.awt.Dimension(636, 100));
+        pnlDirectory.setBackground(new java.awt.Color(30, 130, 234));
+        pnlDirectory.setPreferredSize(new java.awt.Dimension(636, 100));
 
         jLabel17.setFont(new java.awt.Font("Segoe UI", 0, 72)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(255, 255, 255));
@@ -82,17 +82,18 @@ public class HomeData extends javax.swing.JFrame {
 
         jLabel19.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
         jLabel19.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel19.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/output-onlinepngtools.png"))); // NOI18N
         jLabel19.setText("Perpustakaan");
 
         jLabel20.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
         jLabel20.setForeground(new java.awt.Color(255, 255, 255));
         jLabel20.setText("Admin/Data");
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
+        javax.swing.GroupLayout pnlDirectoryLayout = new javax.swing.GroupLayout(pnlDirectory);
+        pnlDirectory.setLayout(pnlDirectoryLayout);
+        pnlDirectoryLayout.setHorizontalGroup(
+            pnlDirectoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlDirectoryLayout.createSequentialGroup()
                 .addGap(38, 38, 38)
                 .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(10, 10, 10)
@@ -101,11 +102,11 @@ public class HomeData extends javax.swing.JFrame {
                 .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 261, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+        pnlDirectoryLayout.setVerticalGroup(
+            pnlDirectoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDirectoryLayout.createSequentialGroup()
                 .addContainerGap(36, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                .addGroup(pnlDirectoryLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addComponent(jLabel19, javax.swing.GroupLayout.DEFAULT_SIZE, 79, Short.MAX_VALUE)
                     .addComponent(jLabel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
@@ -241,6 +242,7 @@ public class HomeData extends javax.swing.JFrame {
         });
 
         jLabel23.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel23.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/HIS_Perminjaman_VLB.png"))); // NOI18N
 
         jLabel24.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel24.setForeground(new java.awt.Color(30, 132, 234));
@@ -261,7 +263,7 @@ public class HomeData extends javax.swing.JFrame {
         pnlPeminjamanLayout.setVerticalGroup(
             pnlPeminjamanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPeminjamanLayout.createSequentialGroup()
-                .addContainerGap(115, Short.MAX_VALUE)
+                .addContainerGap(50, Short.MAX_VALUE)
                 .addComponent(jLabel23)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel24)
@@ -282,6 +284,7 @@ public class HomeData extends javax.swing.JFrame {
         });
 
         jLabel25.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel25.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/HIS_BanyakPinjaman_VLB.png"))); // NOI18N
 
         jLabel26.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel26.setForeground(new java.awt.Color(30, 132, 234));
@@ -304,7 +307,7 @@ public class HomeData extends javax.swing.JFrame {
             .addGroup(pnlBanyakPinjamanLayout.createSequentialGroup()
                 .addGap(49, 49, 49)
                 .addComponent(jLabel25)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 77, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(jLabel26)
                 .addGap(15, 15, 15))
         );
@@ -323,7 +326,7 @@ public class HomeData extends javax.swing.JFrame {
         });
 
         jLabel27.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/HIS_Report Business_VLB.png"))); // NOI18N
+        jLabel27.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/HIS_Buku_VLB.png"))); // NOI18N
 
         jLabel28.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel28.setForeground(new java.awt.Color(30, 132, 234));
@@ -366,7 +369,7 @@ public class HomeData extends javax.swing.JFrame {
         });
 
         jLabel29.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel29.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/HIS_Master_VLB.png"))); // NOI18N
+        jLabel29.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/HIS_DataAnggota_VLB.png"))); // NOI18N
 
         jLabel30.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel30.setForeground(new java.awt.Color(30, 132, 234));
@@ -408,6 +411,7 @@ public class HomeData extends javax.swing.JFrame {
         });
 
         jLabel31.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel31.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/HIS_Pengembalian_VLB.png"))); // NOI18N
 
         jLabel32.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel32.setForeground(new java.awt.Color(30, 132, 234));
@@ -428,7 +432,7 @@ public class HomeData extends javax.swing.JFrame {
         pnlPengembalianLayout.setVerticalGroup(
             pnlPengembalianLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlPengembalianLayout.createSequentialGroup()
-                .addContainerGap(115, Short.MAX_VALUE)
+                .addContainerGap(50, Short.MAX_VALUE)
                 .addComponent(jLabel31)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel32)
@@ -495,6 +499,7 @@ public class HomeData extends javax.swing.JFrame {
         });
 
         jLabel35.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel35.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/HIS_BelumDikembalikan_VLB.png"))); // NOI18N
 
         jLabel36.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel36.setForeground(new java.awt.Color(30, 132, 234));
@@ -515,7 +520,7 @@ public class HomeData extends javax.swing.JFrame {
         pnlBelumDikembalikanLayout.setVerticalGroup(
             pnlBelumDikembalikanLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlBelumDikembalikanLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(49, Short.MAX_VALUE)
                 .addComponent(jLabel35)
                 .addGap(18, 18, 18)
                 .addComponent(jLabel36)
@@ -531,7 +536,7 @@ public class HomeData extends javax.swing.JFrame {
                 .addComponent(minimizePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, 0)
                 .addComponent(closePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-            .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, 1118, Short.MAX_VALUE)
+            .addComponent(pnlDirectory, javax.swing.GroupLayout.DEFAULT_SIZE, 1118, Short.MAX_VALUE)
             .addGroup(mainPanel1Layout.createSequentialGroup()
                 .addGroup(mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(mainPanel1Layout.createSequentialGroup()
@@ -551,8 +556,9 @@ public class HomeData extends javax.swing.JFrame {
                         .addGap(10, 10, 10)
                         .addComponent(pnlLogout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(mainPanel1Layout.createSequentialGroup()
+                        .addGap(4, 4, 4)
                         .addComponent(pnlPengembalian, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(10, 10, 10)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(pnlBelumDikembalikan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(190, Short.MAX_VALUE))
         );
@@ -563,23 +569,19 @@ public class HomeData extends javax.swing.JFrame {
                     .addComponent(closePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(minimizePanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(32, 32, 32)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(pnlDirectory, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
                 .addGroup(mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, mainPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(pnlHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(mainPanel1Layout.createSequentialGroup()
-                        .addGap(111, 111, 111)
-                        .addGroup(mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(pnlPeminjaman, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(pnlPengembalian, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(pnlBelumDikembalikan, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addComponent(pnlPeminjaman, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnlHome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnlPengembalian, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(pnlBelumDikembalikan, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(mainPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(pnlAnggota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlLogout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlBanyakPinjaman, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlKoleksi, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlAnggota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(pnlBanyakPinjaman, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(100, 100, 100))
         );
 
@@ -643,7 +645,7 @@ public class HomeData extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlHomeMouseExited
 
     private void pnlPeminjamanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlPeminjamanMouseClicked
-        V_Data_Peminjaman VP = new V_Data_Peminjaman();
+        V_Data_Peminjaman_MinusDelete VP = new V_Data_Peminjaman_MinusDelete();
         VP.show();
     }//GEN-LAST:event_pnlPeminjamanMouseClicked
 
@@ -656,7 +658,8 @@ public class HomeData extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlPeminjamanMouseExited
 
     private void pnlBanyakPinjamanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlBanyakPinjamanMouseClicked
-
+        V_Beres_Data_BanyakPinjaman VB = new V_Beres_Data_BanyakPinjaman();
+        VB.show();
     }//GEN-LAST:event_pnlBanyakPinjamanMouseClicked
 
     private void pnlBanyakPinjamanMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlBanyakPinjamanMouseEntered
@@ -668,7 +671,7 @@ public class HomeData extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlBanyakPinjamanMouseExited
 
     private void pnlKoleksiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlKoleksiMouseClicked
-        V_Data_Koleksi VK = new V_Data_Koleksi();
+        V_Beres_Data_Koleksi VK = new V_Beres_Data_Koleksi();
         VK.show();
     }//GEN-LAST:event_pnlKoleksiMouseClicked
 
@@ -681,7 +684,7 @@ public class HomeData extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlKoleksiMouseExited
 
     private void pnlAnggotaMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlAnggotaMouseClicked
-        V_Data_Anggota MM = new V_Data_Anggota();
+        V_Beres_Data_Anggota MM = new V_Beres_Data_Anggota();
         MM.show();
     }//GEN-LAST:event_pnlAnggotaMouseClicked
 
@@ -694,7 +697,7 @@ public class HomeData extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlAnggotaMouseExited
 
     private void pnlPengembalianMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlPengembalianMouseClicked
-        V_Data_Pengembalian VP = new V_Data_Pengembalian();
+        V_Beres_Data_Pengembalian VP = new V_Beres_Data_Pengembalian();
         VP.show();
     }//GEN-LAST:event_pnlPengembalianMouseClicked
 
@@ -724,7 +727,8 @@ public class HomeData extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlLogoutMouseExited
 
     private void pnlBelumDikembalikanMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlBelumDikembalikanMouseClicked
-
+        V_Beres_Data_BelumDikembalikan VB = new V_Beres_Data_BelumDikembalikan();
+        VB.show();
     }//GEN-LAST:event_pnlBelumDikembalikanMouseClicked
 
     private void pnlBelumDikembalikanMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlBelumDikembalikanMouseEntered
@@ -795,12 +799,12 @@ public class HomeData extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel35;
     private javax.swing.JLabel jLabel36;
     private javax.swing.JLabel jLabel7;
-    private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel mainPanel1;
     private javax.swing.JPanel minimizePanel;
     private javax.swing.JPanel pnlAnggota;
     private javax.swing.JPanel pnlBanyakPinjaman;
     private javax.swing.JPanel pnlBelumDikembalikan;
+    private javax.swing.JPanel pnlDirectory;
     private javax.swing.JPanel pnlHome;
     private javax.swing.JPanel pnlKoleksi;
     private javax.swing.JPanel pnlLogout;

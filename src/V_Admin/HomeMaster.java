@@ -44,7 +44,7 @@ public class HomeMaster extends javax.swing.JFrame {
         pnlHome = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
-        pnlTambahPegawai = new javax.swing.JPanel();
+        pnlTambahMaster = new javax.swing.JPanel();
         jLabel5 = new javax.swing.JLabel();
         jLabel15 = new javax.swing.JLabel();
         pnlGantiPassword = new javax.swing.JPanel();
@@ -76,11 +76,12 @@ public class HomeMaster extends javax.swing.JFrame {
 
         jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/output-onlinepngtools.png"))); // NOI18N
         jLabel10.setText("Perpustaakaan");
 
         jLabel12.setFont(new java.awt.Font("Segoe UI", 1, 22)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel12.setText("Master/");
+        jLabel12.setText("Admin/Master");
 
         javax.swing.GroupLayout DirectoryPanelLayout = new javax.swing.GroupLayout(DirectoryPanel);
         DirectoryPanel.setLayout(DirectoryPanelLayout);
@@ -222,16 +223,16 @@ public class HomeMaster extends javax.swing.JFrame {
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
-        pnlTambahPegawai.setBackground(new java.awt.Color(234, 234, 234));
-        pnlTambahPegawai.addMouseListener(new java.awt.event.MouseAdapter() {
+        pnlTambahMaster.setBackground(new java.awt.Color(234, 234, 234));
+        pnlTambahMaster.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                pnlTambahPegawaiMouseClicked(evt);
+                pnlTambahMasterMouseClicked(evt);
             }
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                pnlTambahPegawaiMouseEntered(evt);
+                pnlTambahMasterMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                pnlTambahPegawaiMouseExited(evt);
+                pnlTambahMasterMouseExited(evt);
             }
         });
 
@@ -241,22 +242,22 @@ public class HomeMaster extends javax.swing.JFrame {
         jLabel15.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(30, 132, 234));
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel15.setText("Tambah Pegawai");
+        jLabel15.setText("Tambah Master");
 
-        javax.swing.GroupLayout pnlTambahPegawaiLayout = new javax.swing.GroupLayout(pnlTambahPegawai);
-        pnlTambahPegawai.setLayout(pnlTambahPegawaiLayout);
-        pnlTambahPegawaiLayout.setHorizontalGroup(
-            pnlTambahPegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTambahPegawaiLayout.createSequentialGroup()
+        javax.swing.GroupLayout pnlTambahMasterLayout = new javax.swing.GroupLayout(pnlTambahMaster);
+        pnlTambahMaster.setLayout(pnlTambahMasterLayout);
+        pnlTambahMasterLayout.setHorizontalGroup(
+            pnlTambahMasterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlTambahMasterLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlTambahPegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(pnlTambahMasterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(jLabel15, javax.swing.GroupLayout.DEFAULT_SIZE, 182, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        pnlTambahPegawaiLayout.setVerticalGroup(
-            pnlTambahPegawaiLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlTambahPegawaiLayout.createSequentialGroup()
+        pnlTambahMasterLayout.setVerticalGroup(
+            pnlTambahMasterLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlTambahMasterLayout.createSequentialGroup()
                 .addGap(49, 49, 49)
                 .addComponent(jLabel5)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -320,7 +321,7 @@ public class HomeMaster extends javax.swing.JFrame {
         });
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/HIS_Add User_VLB.png"))); // NOI18N
+        jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/HIS_Grid_VLB.png"))); // NOI18N
 
         jLabel17.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel17.setForeground(new java.awt.Color(30, 132, 234));
@@ -362,7 +363,7 @@ public class HomeMaster extends javax.swing.JFrame {
         });
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/HIS_Add User_VLB.png"))); // NOI18N
+        jLabel8.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Icon/HIS_Grid_VLB.png"))); // NOI18N
 
         jLabel18.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         jLabel18.setForeground(new java.awt.Color(30, 132, 234));
@@ -450,7 +451,7 @@ public class HomeMaster extends javax.swing.JFrame {
                         .addGap(10, 10, 10)
                         .addComponent(pnlGantiPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(10, 10, 10)
-                        .addComponent(pnlTambahPegawai, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(pnlTambahMaster, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(mainPanelLayout.createSequentialGroup()
                         .addComponent(pnlTambahKategori, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -470,7 +471,7 @@ public class HomeMaster extends javax.swing.JFrame {
                 .addGap(101, 101, 101)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(pnlGantiPassword, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(pnlTambahPegawai, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlTambahMaster, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlHome, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(mainPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -541,21 +542,22 @@ public class HomeMaster extends javax.swing.JFrame {
         pnlHome.setBackground(new java.awt.Color(234, 234, 234));
     }//GEN-LAST:event_pnlHomeMouseExited
 
-    private void pnlTambahPegawaiMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlTambahPegawaiMouseClicked
-        V_GantiPassword_Done ps = new V_GantiPassword_Done();
+    private void pnlTambahMasterMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlTambahMasterMouseClicked
+
+        V_Beres_Tambah_Master ps = new V_Beres_Tambah_Master();
         ps.show();
-    }//GEN-LAST:event_pnlTambahPegawaiMouseClicked
+    }//GEN-LAST:event_pnlTambahMasterMouseClicked
 
-    private void pnlTambahPegawaiMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlTambahPegawaiMouseEntered
-        pnlTambahPegawai.setBackground(new java.awt.Color(115, 163, 239));
-    }//GEN-LAST:event_pnlTambahPegawaiMouseEntered
+    private void pnlTambahMasterMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlTambahMasterMouseEntered
+        pnlTambahMaster.setBackground(new java.awt.Color(115, 163, 239));
+    }//GEN-LAST:event_pnlTambahMasterMouseEntered
 
-    private void pnlTambahPegawaiMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlTambahPegawaiMouseExited
-        pnlTambahPegawai.setBackground(new java.awt.Color(234, 234, 234));
-    }//GEN-LAST:event_pnlTambahPegawaiMouseExited
+    private void pnlTambahMasterMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlTambahMasterMouseExited
+        pnlTambahMaster.setBackground(new java.awt.Color(234, 234, 234));
+    }//GEN-LAST:event_pnlTambahMasterMouseExited
 
     private void pnlGantiPasswordMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlGantiPasswordMouseClicked
-        V_Tambah_Master ps = new V_Tambah_Master();
+        V_Beres_Ubah_Password ps = new V_Beres_Ubah_Password();
         ps.show();
     }//GEN-LAST:event_pnlGantiPasswordMouseClicked
 
@@ -568,7 +570,7 @@ public class HomeMaster extends javax.swing.JFrame {
     }//GEN-LAST:event_pnlGantiPasswordMouseExited
 
     private void pnlTambahKategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlTambahKategoriMouseClicked
-        V_Tambah_Kategori VT = new V_Tambah_Kategori();
+        V_Beres_Tambah_Kategori VT = new V_Beres_Tambah_Kategori();
         VT.show();
     }//GEN-LAST:event_pnlTambahKategoriMouseClicked
 
@@ -582,7 +584,7 @@ public class HomeMaster extends javax.swing.JFrame {
 
     private void pnlLihatKategoriMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlLihatKategoriMouseClicked
         // TODO add your handling code here:
-        V_Data_Kategori VT = new V_Data_Kategori();
+        V_Beres_Data_Kategori VT = new V_Beres_Data_Kategori();
         VT.show();
     }//GEN-LAST:event_pnlLihatKategoriMouseClicked
 
@@ -652,14 +654,12 @@ public class HomeMaster extends javax.swing.JFrame {
     private javax.swing.JPanel closePanel;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel18;
-    private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel5;
@@ -674,8 +674,7 @@ public class HomeMaster extends javax.swing.JFrame {
     private javax.swing.JPanel pnlLihatKategori;
     private javax.swing.JPanel pnlLogout;
     private javax.swing.JPanel pnlTambahKategori;
-    private javax.swing.JPanel pnlTambahPegawai;
-    private javax.swing.JPanel pnlTambahPegawai1;
+    private javax.swing.JPanel pnlTambahMaster;
     private javax.swing.JLabel txtClose;
     private javax.swing.JLabel txtMinimize;
     // End of variables declaration//GEN-END:variables

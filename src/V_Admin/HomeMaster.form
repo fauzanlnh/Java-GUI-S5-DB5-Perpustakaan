@@ -68,7 +68,7 @@
                           <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
                           <Component id="pnlGantiPassword" min="-2" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                          <Component id="pnlTambahPegawai" min="-2" max="-2" attributes="0"/>
+                          <Component id="pnlTambahMaster" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="pnlTambahKategori" max="32767" attributes="0"/>
@@ -94,7 +94,7 @@
                   <EmptySpace min="-2" pref="101" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" max="-2" attributes="0">
                       <Component id="pnlGantiPassword" alignment="0" max="32767" attributes="0"/>
-                      <Component id="pnlTambahPegawai" alignment="0" max="32767" attributes="0"/>
+                      <Component id="pnlTambahMaster" alignment="0" max="32767" attributes="0"/>
                       <Component id="pnlHome" alignment="0" min="-2" pref="175" max="-2" attributes="0"/>
                   </Group>
                   <EmptySpace max="-2" attributes="0"/>
@@ -168,6 +168,9 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
+                <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
+                  <Image iconType="3" name="/Icon/output-onlinepngtools.png"/>
+                </Property>
                 <Property name="text" type="java.lang.String" value="Perpustaakaan"/>
               </Properties>
             </Component>
@@ -179,7 +182,7 @@
                 <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                   <Color blue="ff" green="ff" red="ff" type="rgb"/>
                 </Property>
-                <Property name="text" type="java.lang.String" value="Master/"/>
+                <Property name="text" type="java.lang.String" value="Admin/Master"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -348,16 +351,16 @@
             </Component>
           </SubComponents>
         </Container>
-        <Container class="javax.swing.JPanel" name="pnlTambahPegawai">
+        <Container class="javax.swing.JPanel" name="pnlTambahMaster">
           <Properties>
             <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
               <Color blue="ea" green="ea" red="ea" type="rgb"/>
             </Property>
           </Properties>
           <Events>
-            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pnlTambahPegawaiMouseClicked"/>
-            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pnlTambahPegawaiMouseEntered"/>
-            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pnlTambahPegawaiMouseExited"/>
+            <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pnlTambahMasterMouseClicked"/>
+            <EventHandler event="mouseEntered" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pnlTambahMasterMouseEntered"/>
+            <EventHandler event="mouseExited" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="pnlTambahMasterMouseExited"/>
           </Events>
 
           <Layout>
@@ -403,7 +406,7 @@
                   <Color blue="ea" green="84" red="1e" type="rgb"/>
                 </Property>
                 <Property name="horizontalAlignment" type="int" value="0"/>
-                <Property name="text" type="java.lang.String" value="Tambah Pegawai"/>
+                <Property name="text" type="java.lang.String" value="Tambah Master"/>
               </Properties>
             </Component>
           </SubComponents>
@@ -510,7 +513,7 @@
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Icon/HIS_Add User_VLB.png"/>
+                  <Image iconType="3" name="/Icon/HIS_Grid_VLB.png"/>
                 </Property>
               </Properties>
             </Component>
@@ -570,7 +573,7 @@
               <Properties>
                 <Property name="horizontalAlignment" type="int" value="0"/>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/Icon/HIS_Add User_VLB.png"/>
+                  <Image iconType="3" name="/Icon/HIS_Grid_VLB.png"/>
                 </Property>
               </Properties>
             </Component>

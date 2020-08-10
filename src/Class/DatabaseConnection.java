@@ -10,10 +10,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import javax.swing.JOptionPane;
 
-/**
- *
- * @author Fauzanlh
- */
 public class DatabaseConnection {
        public static Connection getKoneksi(String host, String port, String username, String password, String db) {
         String konString = "jdbc:mysql://" + host + ":" + port + "/" + db;

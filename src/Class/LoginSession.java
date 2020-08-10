@@ -5,10 +5,6 @@
  */
 package Class;
 
-/**
- *
- * @author Fauzanlh
- */
 public class LoginSession {
 
     private static String Username;
